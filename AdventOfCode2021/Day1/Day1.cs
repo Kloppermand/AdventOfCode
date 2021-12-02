@@ -10,24 +10,20 @@ namespace AdventOfCode2021.Day1
 {
     public static class Day1
     {
+        private const string day = "Day1";
         public static void CalculateA()
         {
-            string inputPathA = Path.Combine(Environment.CurrentDirectory, $"../../../Day1/Day1_input_a.txt");
-            string outputPathA = Path.Combine(Environment.CurrentDirectory, $"../../../Day1/Day1_output_a.txt");
-
-            var numbers = File.ReadAllText(inputPathA).Split("\r\n").Select(x => int.Parse(x)).ToArray();
-            
-            File.WriteAllText(outputPathA, GetIncreases(numbers).ToString());
+            var numbers = GeneralMethods.ReadInputFileIntArray(day, "a");
+            string result = GetIncreases(numbers).ToString();
+            GeneralMethods.WriteOutput(day, "a", result);
         }
         
         public static void CalculateB()
         {
-            string inputPathA = Path.Combine(Environment.CurrentDirectory, $"../../../Day1/Day1_input_a.txt");
-            string outputPathA = Path.Combine(Environment.CurrentDirectory, $"../../../Day1/Day1_output_b.txt");
-
-            var numbers = File.ReadAllText(inputPathA).Split("\r\n").Select(x => int.Parse(x)).ToArray();
+            var numbers = GeneralMethods.ReadInputFileIntArray(day, "a");
             var avgNumbers = SlidingAverage(numbers, 3);
-            File.WriteAllText(outputPathA, GetIncreases(avgNumbers).ToString());
+            string result = GetIncreases(avgNumbers).ToString();
+            GeneralMethods.WriteOutput(day, "b", result);
         }
 
         private static int GetIncreases(int[] numbers)
