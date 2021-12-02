@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
+using Utilities;
 
-namespace AdventOfCode2021
+namespace Templates
 {
     public static class Template
     {
@@ -8,21 +9,21 @@ namespace AdventOfCode2021
 
         public static void CalculateA()
         {
-            var commands = GeneralMethods.ReadInputFileStringArray(day, "a");
+            var input = IO.ReadInputFileStringArray(day, "a");
 
 
 
             string result = "";
-            GeneralMethods.WriteOutput(day, "a", result);
+            IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
         {
-            var commands = GeneralMethods.ReadInputFileStringArray(day, "a");
+            var input = IO.ReadInputFileStringArray(day, "a");
 
 
 
             string result = "";
-            GeneralMethods.WriteOutput(day, "b", result);
+            IO.WriteOutput(day, "b", result);
         }
     }
 }

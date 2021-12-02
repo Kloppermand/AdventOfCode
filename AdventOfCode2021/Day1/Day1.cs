@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace AdventOfCode2021.Day1
 {
@@ -13,17 +14,17 @@ namespace AdventOfCode2021.Day1
         private static string day = MethodBase.GetCurrentMethod().DeclaringType.Name;
         public static void CalculateA()
         {
-            var numbers = GeneralMethods.ReadInputFileIntArray(day, "a");
+            var numbers = Utilities.IO.ReadInputFileIntArray(day, "a");
             string result = GetIncreases(numbers).ToString();
-            GeneralMethods.WriteOutput(day, "a", result);
+            Utilities.IO.WriteOutput(day, "a", result);
         }
         
         public static void CalculateB()
         {
-            var numbers = GeneralMethods.ReadInputFileIntArray(day, "a");
+            var numbers = Utilities.IO.ReadInputFileIntArray(day, "a");
             var avgNumbers = SlidingAverage(numbers, 3);
             string result = GetIncreases(avgNumbers).ToString();
-            GeneralMethods.WriteOutput(day, "b", result);
+            Utilities.IO.WriteOutput(day, "b", result);
         }
 
         private static int GetIncreases(int[] numbers)
