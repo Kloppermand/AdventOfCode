@@ -12,45 +12,37 @@ namespace AdventOfCode2021.Day2
         public int Depth { get; set; }
         public int Aim { get; set; }
 
-        public void RunCommandA(string command)
+        public void RunCommandA(Command command)
         {
-            string[] splitCommand = command.Split(' ');
-            string direction = splitCommand[0];
-            int distance = int.Parse(splitCommand[1]);
-
-            switch (direction)
+            switch (command.direction)
             {
-                case "forward":
-                    Horizontal += distance;
+                case Direction.forward:
+                    Horizontal += command.distance;
                     break;
-                case "up":
-                    Depth -= distance;
+                case Direction.up:
+                    Depth -= command.distance;
                     break;
-                case "down":
-                    Depth += distance;
+                case Direction.down:
+                    Depth += command.distance;
                     break;
                 default:
                     break;
             }
         }
         
-        public void RunCommandB(string command)
+        public void RunCommandB(Command command)
         {
-            string[] splitCommand = command.Split(' ');
-            string direction = splitCommand[0];
-            int distance = int.Parse(splitCommand[1]);
-
-            switch (direction)
+            switch (command.direction)
             {
-                case "forward":
-                    Horizontal += distance;
-                    Depth += Aim * distance;
+                case Direction.forward:
+                    Horizontal += command.distance;
+                    Depth += Aim * command.distance;
                     break;
-                case "up":
-                    Aim -= distance;
+                case Direction.up:
+                    Aim -= command.distance;
                     break;
-                case "down":
-                    Aim += distance;
+                case Direction.down:
+                    Aim += command.distance;
                     break;
                 default:
                     break;
@@ -61,5 +53,6 @@ namespace AdventOfCode2021.Day2
         {
             return Horizontal * Depth;
         }
+
     }
 }

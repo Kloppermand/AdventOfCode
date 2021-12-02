@@ -10,7 +10,7 @@ namespace AdventOfCode2021.Day1
 {
     public static class Day1
     {
-        private const string day = "Day1";
+        private static string day = MethodBase.GetCurrentMethod().DeclaringType.Name;
         public static void CalculateA()
         {
             var numbers = GeneralMethods.ReadInputFileIntArray(day, "a");
