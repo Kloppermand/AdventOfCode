@@ -3,7 +3,7 @@ using Utilities;
 
 namespace Templates
 {
-    public static class Template
+    public static class DayMainTemplate
     {
         private static string day = MethodBase.GetCurrentMethod().DeclaringType.Name;
 
@@ -13,7 +13,7 @@ namespace Templates
 
 
 
-            string result = "";
+            string result = "NOT SOLVED YET";
             IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
@@ -22,7 +22,7 @@ namespace Templates
 
 
 
-            string result = "";
+            string result = "NOT SOLVED YET";
             IO.WriteOutput(day, "b", result);
         }
     }

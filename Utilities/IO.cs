@@ -23,6 +23,13 @@ namespace Utilities
             string[] retArr = File.ReadAllText(path).Split("\r\n").ToArray();
             return retArr;
         }
+        
+        public static string[] ReadInputFileStringArrayBlankLine(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            string[] retArr = File.ReadAllText(path).Split("\r\n\r\n").Select(x => x.Replace("\r\n"," ")).ToArray();
+            return retArr;
+        }
         public static void WriteOutput(string day, string puzzle, string value)
         {
             string path = GetPath(day, puzzle, IOType.output);
@@ -31,7 +38,7 @@ namespace Utilities
 
         private static string GetPath(string day, string puzzle, IOType io)
         {
-            return Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io.ToString()}_{puzzle}.txt");
+            return Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
         }
     }
 }
