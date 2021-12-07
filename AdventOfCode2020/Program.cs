@@ -25,6 +25,7 @@ namespace AdventOfCode2020
             //Day6.Day6.CalculateB();
 
             Day7.Day7.CalculateA();
+            Day7.Day7.CalculateB();
         }
     }
 }
