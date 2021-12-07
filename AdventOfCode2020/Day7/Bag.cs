@@ -43,10 +43,10 @@ namespace AdventOfCode2020.Day7
 
         public int GetTotalAmount()
         {
-            int totalAmount = Contains.Count == 0 ? 1 : 0;
+            int totalAmount = 0;
             foreach (var container in Contains)
             {
-                totalAmount += container.Item1.GetTotalAmount() * container.Item2;
+                totalAmount += (container.Item1.GetTotalAmount()+1) * container.Item2;
             }
             return totalAmount;
         }
