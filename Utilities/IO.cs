@@ -17,6 +17,12 @@ namespace Utilities
             int[] retArr = File.ReadAllText(path).Split("\r\n").Select(x => int.Parse(x)).ToArray();
             return retArr;
         }
+        public static long[] ReadInputFileLongArray(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            long[] retArr = File.ReadAllText(path).Split("\r\n").Select(x => long.Parse(x)).ToArray();
+            return retArr;
+        }
         
         public static int[] ReadInputFileIntArraySingleLine(string day, string puzzle)
         {
