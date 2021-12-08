@@ -29,12 +29,23 @@ namespace AdventOfCode2020.Day10
 
         public static void CalculateB()
         {
-            var input = IO.ReadInputFileStringArray(day, "a");
+            var input = IO.ReadInputFileIntArray(day, "a");
+            input = input.Concat(new int[] { 0, input.Max() + 3 }).ToArray();
+            Array.Sort(input);
+            List<Adapter> adapters = new();
+            foreach (var item in input)
+            {
+                adapters.Add(new Adapter() { Jolts = item });
+            }
+            adapters[0].WaysToReach = 1;
+
+            for (int i = 1; i < adapters.Count; i++)
+            {
+                adapters[i].WaysToReach = adapters.Where(x => x.Jolts < adapters[i].Jolts && x.Jolts >= adapters[i].Jolts - 3).Select(x => x.WaysToReach).Sum();
+            }
 
 
-
-            string result = "NOT SOLVED YET";
-            IO.WriteOutput(day, "b", result);
+            IO.WriteOutput(day, "b", adapters.Last().WaysToReach.ToString());
         }
     }
 }
