@@ -39,11 +39,10 @@ namespace AdventOfCode2020.Day10
             }
             adapters[0].WaysToReach = 1;
 
-            for (int i = 1; i < adapters.Count; i++)
+            foreach (var adapter in adapters.Skip(1))
             {
-                adapters[i].WaysToReach = adapters.Where(x => x.Jolts < adapters[i].Jolts && x.Jolts >= adapters[i].Jolts - 3).Select(x => x.WaysToReach).Sum();
+                adapter.WaysToReach = adapters.Where(x => x.Jolts < adapter.Jolts && x.Jolts >= adapter.Jolts - 3).Select(x => x.WaysToReach).Sum();
             }
-
 
             IO.WriteOutput(day, "b", adapters.Last().WaysToReach.ToString());
         }
