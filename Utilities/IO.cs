@@ -73,6 +73,11 @@ namespace Utilities
             File.WriteAllText(path, value);
         }
 
+        public static void WriteOutput(string day, string puzzle, int value)
+        {
+            WriteOutput(day, puzzle, value.ToString());
+        }
+
         private static string GetPath(string day, string puzzle, IOType io)
         {
             return Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
