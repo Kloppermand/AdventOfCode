@@ -15,14 +15,17 @@ namespace Utilities
         public static int[] ReadInputFileIntArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            int[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
+            string[] tempArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            if (tempArr[^1] == "") tempArr = tempArr[..^1];
+            int[] retArr = tempArr.Select(x => int.Parse(x)).ToArray();
             return retArr;
         }
 
         public static int[,] ReadInputFileInt2DArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] input = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string[] input = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToArray();
+            if (input[^1] == "") input = input[..^1];
             int[,] grid = new int[input[0].Length, input.Length];
             for (int j = 0; j < input.Length; j++)
             {
@@ -38,7 +41,9 @@ namespace Utilities
         public static long[] ReadInputFileLongArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            long[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => long.Parse(x)).ToArray();
+            string[] tempArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            if (tempArr[^1] == "") tempArr = tempArr[..^1];
+            long[] retArr = tempArr.Select(x => long.Parse(x)).ToArray();
             return retArr;
         }
 
@@ -58,14 +63,16 @@ namespace Utilities
         public static string[] ReadInputFileStringArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] retArr = File.ReadAllText(path).Split(new string[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string[] retArr = File.ReadAllText(path).Split(new string[] {"\r\n", "\n"}, StringSplitOptions.None).ToArray();
+            if (retArr[^1] == "") retArr = retArr[..^1];
             return retArr;
         }
 
         public static string[] ReadInputFileStringArrayBlankLine(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Replace("\r\n", " ").Replace("\n", " ")).ToArray();
+            string[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.None).Select(x => x.Replace("\r\n", " ").Replace("\n", " ")).ToArray();
+            if (retArr[^1] == "") retArr = retArr[..^1];
             return retArr;
         }
         public static void WriteOutput(string day, string puzzle, string value)
@@ -84,7 +91,7 @@ namespace Utilities
             var year = System.Reflection.Assembly.GetEntryAssembly().GetName().Name[^4..];
 
             var path = Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
-            if (!File.Exists(path))
+            if (!File.Exists(path) && io == IOType.input)
             {
                 HttpWebRequest rq = (HttpWebRequest)WebRequest.Create($"https://adventofcode.com/{year}/day/{day.Substring(3)}/input");
                 rq.CookieContainer = new CookieContainer();
