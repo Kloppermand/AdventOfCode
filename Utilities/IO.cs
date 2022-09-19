@@ -57,8 +57,15 @@ namespace Utilities
         public static string ReadInputFileString(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string data = File.ReadAllText(path);
+            string data = File.ReadAllText(path).Trim();
             return data;
+        }
+
+        public static char[] ReadInputFileCharArray(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            string data = File.ReadAllText(path);
+            return data.Trim().ToCharArray();
         }
         public static string[] ReadInputFileStringArray(string day, string puzzle)
         {
