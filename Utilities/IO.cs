@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace Utilities
 {
@@ -14,14 +15,14 @@ namespace Utilities
         public static int[] ReadInputFileIntArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            int[] retArr = File.ReadAllText(path).Split("\r\n").Select(x => int.Parse(x)).ToArray();
+            int[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
             return retArr;
         }
 
         public static int[,] ReadInputFileInt2DArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] input = File.ReadAllText(path).Split("\r\n").ToArray();
+            string[] input = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             int[,] grid = new int[input[0].Length, input.Length];
             for (int j = 0; j < input.Length; j++)
             {
@@ -37,10 +38,10 @@ namespace Utilities
         public static long[] ReadInputFileLongArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            long[] retArr = File.ReadAllText(path).Split("\r\n").Select(x => long.Parse(x)).ToArray();
+            long[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => long.Parse(x)).ToArray();
             return retArr;
         }
-        
+
         public static int[] ReadInputFileIntArraySingleLine(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
@@ -57,14 +58,14 @@ namespace Utilities
         public static string[] ReadInputFileStringArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] retArr = File.ReadAllText(path).Split("\r\n").ToArray();
+            string[] retArr = File.ReadAllText(path).Split(new string[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries).ToArray();
             return retArr;
         }
-        
+
         public static string[] ReadInputFileStringArrayBlankLine(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] retArr = File.ReadAllText(path).Split("\r\n\r\n").Select(x => x.Replace("\r\n"," ")).ToArray();
+            string[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Replace("\r\n", " ").Replace("\n", " ")).ToArray();
             return retArr;
         }
         public static void WriteOutput(string day, string puzzle, string value)
@@ -80,7 +81,26 @@ namespace Utilities
 
         private static string GetPath(string day, string puzzle, IOType io)
         {
-            return Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
+            var year = System.Reflection.Assembly.GetEntryAssembly().GetName().Name[^4..];
+
+            var path = Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
+            if (!File.Exists(path))
+            {
+                HttpWebRequest rq = (HttpWebRequest)WebRequest.Create($"https://adventofcode.com/{year}/day/{day.Substring(3)}/input");
+                rq.CookieContainer = new CookieContainer();
+                Cookie cookie = new Cookie("session", File.ReadAllText("../../../../Utilities/sessionId.txt"))
+                {
+                    Domain = ".adventofcode.com",
+                    Path = "/",
+                    Expired = false,
+                    HttpOnly = true
+                };
+                rq.CookieContainer.Add(cookie);
+                HttpWebResponse resp = (HttpWebResponse)rq.GetResponse();
+                using FileStream fs = new(path, FileMode.CreateNew);
+                resp.GetResponseStream().CopyTo(fs);
+            }
+            return path;
         }
 
         public static void Print2DArray(int[,] array)
