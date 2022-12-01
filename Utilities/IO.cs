@@ -101,6 +101,7 @@ namespace Utilities
             if (!File.Exists(path) && io == IOType.input)
             {
                 HttpWebRequest rq = (HttpWebRequest)WebRequest.Create($"https://adventofcode.com/{year}/day/{day.Substring(3)}/input");
+                rq.UserAgent = "https://github.com/Kloppermand/AdventOfCode/tree/master/Utilities by kloppermand@hotmail.com";
                 rq.CookieContainer = new CookieContainer();
                 Cookie cookie = new Cookie("session", File.ReadAllText("../../../../Utilities/sessionId.txt"))
                 {
