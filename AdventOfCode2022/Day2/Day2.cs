@@ -14,7 +14,7 @@ namespace AdventOfCode2022.Day2
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
-            int score = input.Sum(round => round[2]-87 + ((round[2] - round[0] -19) % 3) * 3);
+            int score = input.Sum(x => x[2]-87 + (x[2] - x[0] -1) % 3 * 3);
 
             IO.WriteOutput(day, "a", score);
         }
@@ -22,7 +22,7 @@ namespace AdventOfCode2022.Day2
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
-            var score = input.Sum(round => (round[0] + round[2]-151) % 3 + 1 + (round[2]-88) * 3);
+            var score = input.Sum(x => (x[0] + x[2]-1) % 3 + 1 + (x[2]-88) * 3);
 
             IO.WriteOutput(day, "b", score);
         }
