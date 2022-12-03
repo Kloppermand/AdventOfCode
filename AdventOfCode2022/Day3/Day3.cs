@@ -13,7 +13,7 @@ namespace AdventOfCode2022.Day3
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            string priorties = "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            /*string priorties = "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             int result = 0;
 
             foreach (var rucksack in input)
@@ -23,21 +23,17 @@ namespace AdventOfCode2022.Day3
                 string compartment2 = rucksack[middle..];
                 char common = compartment1.Intersect(compartment2).FirstOrDefault();
                 result += priorties.IndexOf(common);
-            }
+            }*/
+
+            int result = input.Sum(x => "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".IndexOf(x.Substring(0, x.Length / 2).Intersect(x.Substring(x.Length / 2)).FirstOrDefault()));
 
             IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            string priorties = "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            int result = 0;
 
-            for (int i = 0; i < input.Length/3; i++)
-            {
-                char common = input[i*3].Intersect(input[i*3+1]).Intersect(input[i * 3 + 2]).FirstOrDefault();
-                result += priorties.IndexOf(common);
-            }
+            int result = input.Select((x, i) => new { X = x, I = i }).GroupBy(y => y.I / 3).Sum(z => "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".IndexOf(z.ElementAt(0).X.Intersect(z.ElementAt(1).X).Intersect(z.ElementAt(2).X).FirstOrDefault()));
 
             IO.WriteOutput(day, "b", result);
         }
