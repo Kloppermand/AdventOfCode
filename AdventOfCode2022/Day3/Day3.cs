@@ -13,17 +13,6 @@ namespace AdventOfCode2022.Day3
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            /*string priorties = "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            int result = 0;
-
-            foreach (var rucksack in input)
-            {
-                int middle = rucksack.Length/2;
-                string compartment1 = rucksack[..middle];
-                string compartment2 = rucksack[middle..];
-                char common = compartment1.Intersect(compartment2).FirstOrDefault();
-                result += priorties.IndexOf(common);
-            }*/
 
             int result = input.Sum(x => "¤abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".IndexOf(x.Substring(0, x.Length / 2).Intersect(x.Substring(x.Length / 2)).FirstOrDefault()));
 
