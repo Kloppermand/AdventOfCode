@@ -13,14 +13,8 @@ namespace AdventOfCode2022.Day4
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            int result = input.Where(x =>
-                (int.Parse(x.Split(',')[0].Split('-')[0]) <= int.Parse(x.Split(',')[1].Split('-')[0]) &&
-                int.Parse(x.Split(',')[0].Split('-')[1]) >= int.Parse(x.Split(',')[1].Split('-')[1])) ||
-                (int.Parse(x.Split(',')[0].Split('-')[0]) >= int.Parse(x.Split(',')[1].Split('-')[0]) &&
-                int.Parse(x.Split(',')[0].Split('-')[1]) <= int.Parse(x.Split(',')[1].Split('-')[1]))
-                ).Count();
-
-            int fap = input.Select(x => new
+   
+            int result = input.Select(x => new
             {
                 S1 = int.Parse(x.Split(',')[0].Split('-')[0]),
                 E1 = int.Parse(x.Split(',')[0].Split('-')[1]),
