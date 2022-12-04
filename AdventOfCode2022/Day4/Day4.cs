@@ -13,42 +13,32 @@ namespace AdventOfCode2022.Day4
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            int result = 0;
-
-            foreach (var pair in input)
-            {
-                var sections = pair.Split(',');
-                var elf1 = sections[0].Split('-').Select(x => int.Parse(x)).ToArray();
-                var elf2 = sections[1].Split('-').Select(x => int.Parse(x)).ToArray();
-
-                if (elf1[0] <= elf2[0] && elf1[1] >= elf2[1])
-                    result++;
-                else if (elf1[0] >= elf2[0] && elf1[1] <= elf2[1])
-                    result++;
-            }
+            int result = input.Where(x =>
+                (int.Parse(x.Split(',')[0].Split('-')[0]) <= int.Parse(x.Split(',')[1].Split('-')[0]) &&
+                int.Parse(x.Split(',')[0].Split('-')[1]) >= int.Parse(x.Split(',')[1].Split('-')[1])) ||
+                (int.Parse(x.Split(',')[0].Split('-')[0]) >= int.Parse(x.Split(',')[1].Split('-')[0]) &&
+                int.Parse(x.Split(',')[0].Split('-')[1]) <= int.Parse(x.Split(',')[1].Split('-')[1]))
+                ).Count();
 
             IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            int result = 0;
 
-            foreach (var pair in input)
-            {
-                var sections = pair.Split(',');
-                var elf1 = sections[0].Split('-').Select(x => int.Parse(x)).ToArray();
-                var elf2 = sections[1].Split('-').Select(x => int.Parse(x)).ToArray();
+            int result = input.Where(x =>
+                (int.Parse(x.Split(',')[0].Split('-')[0]) >= int.Parse(x.Split(',')[1].Split('-')[0]) &&
+                int.Parse(x.Split(',')[0].Split('-')[0]) <= int.Parse(x.Split(',')[1].Split('-')[1])) ||
 
-                if (elf1[0] >= elf2[0] && elf1[0] <= elf2[1])
-                    result++;
-                else if (elf1[1] >= elf2[0] && elf1[1] <= elf2[1])
-                    result++;
-                else if (elf2[0] >= elf1[0] && elf2[0] <= elf1[1])
-                    result++;
-                else if (elf2[1] >= elf1[0] && elf2[1] <= elf1[1])
-                    result++;
-            }
+                (int.Parse(x.Split(',')[0].Split('-')[1]) >= int.Parse(x.Split(',')[1].Split('-')[0]) &&
+                int.Parse(x.Split(',')[0].Split('-')[1]) <= int.Parse(x.Split(',')[1].Split('-')[1])) ||
+
+                (int.Parse(x.Split(',')[1].Split('-')[0]) >= int.Parse(x.Split(',')[0].Split('-')[0]) &&
+                int.Parse(x.Split(',')[1].Split('-')[0]) <= int.Parse(x.Split(',')[0].Split('-')[1])) ||
+
+                (int.Parse(x.Split(',')[1].Split('-')[1]) >= int.Parse(x.Split(',')[0].Split('-')[0]) &&
+                int.Parse(x.Split(',')[1].Split('-')[1]) <= int.Parse(x.Split(',')[0].Split('-')[0])) 
+                ).Count();
 
             IO.WriteOutput(day, "b", result);
         }
