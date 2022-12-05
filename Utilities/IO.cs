@@ -54,6 +54,13 @@ namespace Utilities
             return retArr;
         }
 
+        public static string ReadInputFileStringRaw(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            string data = File.ReadAllText(path);
+            return data;
+        }
+
         public static string ReadInputFileString(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
