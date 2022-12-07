@@ -10,11 +10,27 @@ namespace AdventOfCode2022.Day7
     {
         public string Name { get; set; }
         public List<string> Files { get; set; }
-        public List<Dir> Dirs { get; set; }
-        public long Size { get; set; }
+        public Dictionary<string, Dir> Dirs { get; set; }
+        private long _size;
+        public long Size {
+            get
+            {
+                if (_size == 0)
+                    RecalculateSize();
+                return _size;
+            }
+        }
         public Dir Parent { get; set; }
 
+        public Dir()
+        {
+            Setup("/", null);
+        }
         public Dir(string name, Dir parent)
+        {
+            Setup(name, parent);
+        }
+        private void Setup(string name, Dir parent)
         {
             Name = name;
             Files = new();
@@ -22,12 +38,12 @@ namespace AdventOfCode2022.Day7
             Parent = parent;
         }
 
-        public long GetFileSizes()
+        public long RecalculateSize()
         {
             long fileSizes = Files.Sum(x => int.Parse(x.Split(' ')[0]));
-            long dirSizes = Dirs.Sum(x => x.GetFileSizes());
-            Size = fileSizes + dirSizes;
-            return Size;
+            long dirSizes = Dirs.Sum(x => x.Value.RecalculateSize());
+            _size = fileSizes + dirSizes;
+            return _size;
         }
 
         public Dir GoToRoot()
@@ -37,15 +53,37 @@ namespace AdventOfCode2022.Day7
             return Parent.GoToRoot();
         }
 
-        public long GetSmallDirSizes()
+        public Dir ChangeDirectory(string target)
+        {
+            if (target.Equals("/"))
+                return GoToRoot();
+
+            if (target.Equals(".."))
+                return Parent;
+            
+            return Dirs[target];
+        }
+
+        public void AddDirectory(string dirName)
+        {
+            Dirs.TryAdd(dirName, new Dir(dirName, this));
+        }
+
+        public void AddFile(string file)
+        {
+            if (!Files.Contains(file))
+                Files.Add(file);
+        }
+
+        public long GetSmallDirSizes(long maxDirSize)
         {
             long total = 0;
             foreach (var dir in Dirs)
             {
-                total += dir.GetSmallDirSizes();
+                total += dir.Value.GetSmallDirSizes(maxDirSize);
             }
 
-            if(Size <= 100000)
+            if(Size <= maxDirSize)
             {
                 total += Size;
             }
@@ -56,10 +94,10 @@ namespace AdventOfCode2022.Day7
         public List<Dir> GetFlatDirList()
         {
             List<Dir> dirs = new();
-            dirs.AddRange(Dirs);
+            dirs.AddRange(Dirs.Values);
             foreach (var dir in Dirs)
             {
-                dirs.AddRange(dir.GetFlatDirList());
+                dirs.AddRange(dir.Value.GetFlatDirList());
             }
             return dirs;
         }

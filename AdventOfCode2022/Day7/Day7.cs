@@ -14,10 +14,9 @@ namespace AdventOfCode2022.Day7
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
-            Dir currentDir = CreateFileStructure(input);
+            Dir dirStructure = CreateFileStructure(input);
 
-            long totalSize =  currentDir.GetFileSizes();
-            long result = currentDir.GetSmallDirSizes();
+            long result = dirStructure.GetSmallDirSizes(100000);
 
             IO.WriteOutput(day, "a", result);
         }
@@ -25,11 +24,10 @@ namespace AdventOfCode2022.Day7
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
-            Dir currentDir = CreateFileStructure(input);
-            long totalSize = currentDir.GetFileSizes();
+            Dir dirStructure = CreateFileStructure(input);
 
-            var flatList = currentDir.GetFlatDirList();
-            long missingSize = currentDir.Size - 40000000;
+            var flatList = dirStructure.GetFlatDirList();
+            long missingSize = dirStructure.Size - 40000000;
 
             var result = flatList.Where(x => x.Size > missingSize).Min(x => x.Size);
 
@@ -38,44 +36,28 @@ namespace AdventOfCode2022.Day7
 
         public static Dir CreateFileStructure(string[] input)
         {
-            var currentDir = new Dir("/", null);
+            var currentDir = new Dir();
             foreach (var line in input)
             {
-                if (line.StartsWith("$"))
+                if (line.Equals("$ ls"))
                 {
-                    if (line.StartsWith("$ cd"))
-                    {
-                        string target = line.Split(' ')[^1];
-                        if (target.Equals("/"))
-                        {
-                            currentDir = currentDir.GoToRoot();
-                        }
-                        else if (target.Equals(".."))
-                        {
-                            currentDir = currentDir.Parent;
-                        }
-                        else
-                        {
-                            currentDir = currentDir.Dirs.Find(x => x.Name == target);
-                        }
-                    }
+                    continue;
+                }
+                else if (line.StartsWith("$ cd"))
+                {
+                    string target = line.Split(' ')[^1];
+                    currentDir = currentDir.ChangeDirectory(target);
+                }
+                else if (line.StartsWith("dir"))
+                {
+                    string dirName = line.Split(' ')[^1];
+                    currentDir.AddDirectory(dirName);
                 }
                 else
                 {
-                    if (line.StartsWith("dir"))
-                    {
-                        string dirName = line.Split(' ')[^1];
-                        if (!currentDir.Dirs.Select(x => x.Name).Contains(dirName))
-                            currentDir.Dirs.Add(new Dir(dirName, currentDir));
-                    }
-                    else
-                    {
-                        if (!currentDir.Files.Contains(line))
-                            currentDir.Files.Add(line);
-                    }
+                    currentDir.AddFile(line);
                 }
             }
-
             currentDir = currentDir.GoToRoot();
             return currentDir;
         }
