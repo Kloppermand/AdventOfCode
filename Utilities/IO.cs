@@ -100,6 +100,11 @@ namespace Utilities
             WriteOutput(day, puzzle, value.ToString());
         }
 
+        public static void WriteOutput(string day, string puzzle, long value)
+        {
+            WriteOutput(day, puzzle, value.ToString());
+        }
+
         private static string GetPath(string day, string puzzle, IOType io)
         {
             var year = System.Reflection.Assembly.GetEntryAssembly().GetName().Name[^4..];
