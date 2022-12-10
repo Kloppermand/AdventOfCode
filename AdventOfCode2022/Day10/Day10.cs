@@ -35,8 +35,23 @@ namespace AdventOfCode2022.Day10
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
+            int regX = 1;
+            int cycle = 1;
+            List<string> CRT = new();
 
-            IO.WriteOutput(day, "b", "gg");
+            foreach (var instruction in input)
+            {
+                WritePixelToCrt(cycle, regX, CRT);
+                cycle++;
+                if (instruction.Equals("noop"))
+                    continue;
+
+                WritePixelToCrt(cycle, regX, CRT);
+                cycle++;
+                regX += int.Parse(instruction.Split(' ')[1]);
+            }
+
+            IO.WriteOutput(day, "b", string.Join('\n',CRT));
         }
 
         private static int GetResultPart(int cycle, int regX)
@@ -44,6 +59,13 @@ namespace AdventOfCode2022.Day10
             if (cycle < 230 && (cycle % 40) - 20 == 0)
                 return cycle * regX;
             return 0;
+        }
+
+        private static void WritePixelToCrt(int cycle, int regX, List<string> CRT)
+        {
+            if (CRT.Count() < cycle / 40 + 1)
+                CRT.Add("");
+            CRT[(cycle-1) / 40] += Math.Abs(regX-((cycle-1)%40)) < 2 ? "#" : ".";
         }
     }
 }
