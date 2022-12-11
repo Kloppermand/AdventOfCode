@@ -81,7 +81,13 @@ namespace Utilities
             if (retArr[^1] == "") retArr = retArr[..^1];
             return retArr;
         }
-
+        public static string[] ReadInputFileStringArrayBlankLineKeepInternalLineBreaks(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            string[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.None);
+            if (retArr[^1] == "") retArr = retArr[..^1];
+            return retArr;
+        }
         public static string[] ReadInputFileStringArrayBlankLine(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);

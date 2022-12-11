@@ -33,8 +33,11 @@ namespace AdventOfCode2022
             //Day9.Day9.CalculateA();
             //Day9.Day9.CalculateB();
 
-            Day10.Day10.CalculateA();
-            Day10.Day10.CalculateB();
+            //Day10.Day10.CalculateA();
+            //Day10.Day10.CalculateB();
+
+            Day11.Day11.CalculateA();
+            Day11.Day11.CalculateB();
         }
     }
 }
