@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -77,7 +78,7 @@ namespace Utilities
         public static string[] ReadInputFileStringArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
-            string[] retArr = File.ReadAllText(path).Split(new string[] {"\r\n", "\n"}, StringSplitOptions.None).ToArray();
+            string[] retArr = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToArray();
             if (retArr[^1] == "") retArr = retArr[..^1];
             return retArr;
         }
@@ -145,6 +146,14 @@ namespace Utilities
                     Console.Write(array[i, j] + ",");
                 }
                 Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+        public static void PrintArray(IEnumerable input)
+        {
+            foreach (var row in input)
+            {
+                Console.WriteLine(row);
             }
             Console.WriteLine();
         }
