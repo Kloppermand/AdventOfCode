@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Utilities
 {
-    public class Point
+    public class Point : IEquatable<Point>
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -14,6 +15,11 @@ namespace Utilities
         public int IntValue { get; set; }
         public string StringValue { get; set; }
 
+        public Point()
+        {
+            X = 0;
+            Y = 0;
+        }
         public Point((int x, int y) point)
         {
             (X, Y) = point;
@@ -39,7 +45,7 @@ namespace Utilities
         {
             int xDiff = (X - other.X);
             int yDiff = (Y - other.Y);
-            return Math.Sqrt(xDiff*xDiff + yDiff*yDiff);
+            return Math.Sqrt(xDiff * xDiff + yDiff * yDiff);
         }
 
         public int CityBlockDistance(Point other)
@@ -51,5 +57,18 @@ namespace Utilities
         {
             return $"({X},{Y})";
         }
+
+        public static Point operator +(Point a, Point b)
+        {
+            return new Point(a.X + b.X, a.Y + b.Y);
+        }
+        public static bool operator ==(Point a, Point b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator !=(Point a, Point b) => !(a == b);
+        public bool Equals(Point other) => this == other;
+        public override int GetHashCode() => (X, Y).GetHashCode();
     }
 }
