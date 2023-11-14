@@ -13,42 +13,97 @@ namespace AdventOfCode2021.Day12
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            var allCaves = new List<string>();
-            var caveNetwork = new List<Cave>();
-            foreach (var pair in input)
+
+            Graph<string> network = new Graph<string>();
+            List<string> caves = new List<string>();
+            foreach (var c in input)
             {
-                var tmp = pair.Split("-");
-                allCaves.Add(tmp[0]);
-                allCaves.Add(tmp[1]);
-            }
-            foreach (var name in allCaves.Distinct())
-            {
-                caveNetwork.Add(new Cave(name));
-            }
-            foreach (var pair in input)
-            {
-                var tmp = pair.Split('-');
-                caveNetwork.Where(x => x.Name.Equals(tmp[0])).First().Connected.Add(
-                    caveNetwork.Where(y => y.Name.Equals(tmp[1])).First()
-                    );
-                caveNetwork.Where(x => x.Name.Equals(tmp[1])).First().Connected.Add(
-                    caveNetwork.Where(y => y.Name.Equals(tmp[0])).First()
-                    );
+                var tmp = c.Split("-");
+                network.AddVertex(tmp[0]);
+                network.AddVertex(tmp[1]);
+                network.AddEdge((tmp[0], tmp[1]));
             }
 
-            caveNetwork.Where(x => x.Name.Equals("end")).First().UpdateWaysToEnd();
+            int result = GetNumberOfPaths(network, "start", new List<string>());
 
-            string result = "NOT SOLVED YET";
             IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
 
+            Graph<string> network = new Graph<string>();
+            List<string> caves = new List<string>();
+            foreach (var c in input)
+            {
+                var tmp = c.Split("-");
+                network.AddVertex(tmp[0]);
+                network.AddVertex(tmp[1]);
+                network.AddEdge((tmp[0], tmp[1]));
+            }
 
-
-            string result = "NOT SOLVED YET";
+            int result = GetNumberOfPaths2(network, "start", new List<string>(), false);
             IO.WriteOutput(day, "b", result);
+        }
+
+        private static int GetNumberOfPaths(Graph<string> network, string fromCave, List<string> path)
+        {
+            int result = 0;
+
+            var steppedNetwork = new Graph<string>(network.AdjacencyList.ToDictionary(c => c.Key, c => c.Value));
+            if (fromCave == fromCave.ToLower())
+                steppedNetwork.RemoveVertex(fromCave);
+
+            var newPath = new List<string>(path);
+            newPath.Add(fromCave);
+
+            foreach (var step in network.AdjacencyList[fromCave])
+            {
+
+                if (step.Equals("end"))
+                {
+                    result++;
+                    continue;
+                }
+
+                result += GetNumberOfPaths(steppedNetwork, step, newPath);
+            }
+
+            return result;
+        }
+
+        private static int GetNumberOfPaths2(Graph<string> network, string fromCave, List<string> path, bool visitedSmallTwice)
+        {
+            int result = 0;
+            if (fromCave == fromCave.ToLower() && path.Contains(fromCave) && visitedSmallTwice)
+                return result;
+
+            var steppedNetwork = new Graph<string>(network.AdjacencyList.ToDictionary(c => c.Key, c => c.Value));
+            if ((fromCave == fromCave.ToLower() && (path.Contains(fromCave) || visitedSmallTwice)) || fromCave.Equals("start") || fromCave.Equals("end"))
+            {
+                if (path.Contains(fromCave))
+                    visitedSmallTwice = true;
+
+                steppedNetwork.RemoveVertex(fromCave);
+            }
+
+            var newPath = new List<string>(path);
+            newPath.Add(fromCave);
+
+            foreach (var step in network.AdjacencyList[fromCave])
+            {
+
+                if (step.Equals("end"))
+                {
+                    result++;
+                    //Console.WriteLine(string.Join(',', newPath));
+                    continue;
+                }
+
+                result += GetNumberOfPaths2(steppedNetwork, step, newPath, visitedSmallTwice);
+            }
+
+            return result;
         }
     }
 }

@@ -9,6 +9,10 @@ namespace Utilities
     public class Graph<T>
     {
         public Graph() { }
+        public Graph(Dictionary<T, HashSet<T>> adjacencyList) 
+        {
+            AdjacencyList = adjacencyList.ToDictionary(k => k.Key, v => v.Value.ToHashSet());
+        }
         public Graph(IEnumerable<T> vertices, IEnumerable<(T, T)> edges)
         {
             foreach (var vertex in vertices)
@@ -21,12 +25,26 @@ namespace Utilities
         public Dictionary<T, HashSet<T>> AdjacencyList { get; } = new Dictionary<T, HashSet<T>>();
 
         /// <summary>
-        /// Adds an empty vertex to the graph. 
+        /// Adds an empty vertex to the graph, if it doesn't exist. 
         /// </summary>
         /// <param name="vertex"></param>
         public void AddVertex(T vertex)
         {
-            AdjacencyList[vertex] = new HashSet<T>();
+            if(!AdjacencyList.ContainsKey(vertex))
+                AdjacencyList[vertex] = new HashSet<T>();
+        }
+        
+        /// <summary>
+        /// Removes an empty vertex to the graph. 
+        /// </summary>
+        /// <param name="vertex"></param>
+        public void RemoveVertex(T vertex)
+        {
+            AdjacencyList.Remove(vertex);
+            foreach(var v in AdjacencyList)
+            {
+                v.Value.Remove(vertex);
+            }
         }
 
         /// <summary>
