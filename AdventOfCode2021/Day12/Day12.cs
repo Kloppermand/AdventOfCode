@@ -50,14 +50,14 @@ namespace AdventOfCode2021.Day12
         {
             int result = 0;
 
-            var steppedNetwork = new Graph<string>(network.AdjacencyList.ToDictionary(c => c.Key, c => c.Value));
+            var steppedNetwork = network.DeepCopyGraph();
             if (fromCave == fromCave.ToLower())
                 steppedNetwork.RemoveVertex(fromCave);
 
             var newPath = new List<string>(path);
             newPath.Add(fromCave);
 
-            foreach (var step in network.AdjacencyList[fromCave])
+            foreach (var step in network.WeightedAdjacencyList[fromCave].Keys)
             {
 
                 if (step.Equals("end"))
@@ -78,7 +78,7 @@ namespace AdventOfCode2021.Day12
             if (fromCave == fromCave.ToLower() && path.Contains(fromCave) && visitedSmallTwice)
                 return result;
 
-            var steppedNetwork = new Graph<string>(network.AdjacencyList.ToDictionary(c => c.Key, c => c.Value));
+            var steppedNetwork = network.DeepCopyGraph();
             if ((fromCave == fromCave.ToLower() && (path.Contains(fromCave) || visitedSmallTwice)) || fromCave.Equals("start") || fromCave.Equals("end"))
             {
                 if (path.Contains(fromCave))
@@ -90,7 +90,7 @@ namespace AdventOfCode2021.Day12
             var newPath = new List<string>(path);
             newPath.Add(fromCave);
 
-            foreach (var step in network.AdjacencyList[fromCave])
+            foreach (var step in network.WeightedAdjacencyList[fromCave].Keys)
             {
 
                 if (step.Equals("end"))

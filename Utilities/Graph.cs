@@ -8,10 +8,11 @@ namespace Utilities
 {
     public class Graph<T>
     {
+        public Dictionary<T, Dictionary<T, int>> WeightedAdjacencyList { get; } = new();
         public Graph() { }
-        public Graph(Dictionary<T, HashSet<T>> adjacencyList) 
+        public Graph(Dictionary<T, Dictionary<T, int>> adjacencyList)
         {
-            AdjacencyList = adjacencyList.ToDictionary(k => k.Key, v => v.Value.ToHashSet());
+            WeightedAdjacencyList = adjacencyList.ToDictionary(k => k.Key, v => v.Value.ToDictionary(k2 => k2.Key, v2 => v2.Value));
         }
         public Graph(IEnumerable<T> vertices, IEnumerable<(T, T)> edges)
         {
@@ -21,8 +22,20 @@ namespace Utilities
             foreach (var edge in edges)
                 AddEdge(edge);
         }
+        public Graph(IEnumerable<T> vertices, IEnumerable<(T, T, int)> edges)
+        {
+            foreach (var vertex in vertices)
+                AddVertex(vertex);
 
-        public Dictionary<T, HashSet<T>> AdjacencyList { get; } = new Dictionary<T, HashSet<T>>();
+            foreach (var edge in edges)
+                AddWeightedEdge((edge.Item1, edge.Item2), edge.Item3);
+        }
+
+        public Graph<T> DeepCopyGraph()
+        {
+            var graph = new Graph<T>(WeightedAdjacencyList.ToDictionary(k => k.Key, v => v.Value.ToDictionary(k2 => k2.Key, v2 => v2.Value)));
+            return graph;
+        }
 
         /// <summary>
         /// Adds an empty vertex to the graph, if it doesn't exist. 
@@ -30,48 +43,75 @@ namespace Utilities
         /// <param name="vertex"></param>
         public void AddVertex(T vertex)
         {
-            if(!AdjacencyList.ContainsKey(vertex))
-                AdjacencyList[vertex] = new HashSet<T>();
+            if (!WeightedAdjacencyList.ContainsKey(vertex))
+                WeightedAdjacencyList[vertex] = new();
         }
-        
+
         /// <summary>
         /// Removes an empty vertex to the graph. 
         /// </summary>
         /// <param name="vertex"></param>
         public void RemoveVertex(T vertex)
         {
-            AdjacencyList.Remove(vertex);
-            foreach(var v in AdjacencyList)
+            WeightedAdjacencyList.Remove(vertex);
+            foreach (var v in WeightedAdjacencyList)
             {
                 v.Value.Remove(vertex);
             }
         }
 
         /// <summary>
-        /// Adds an undirected edge to the graph between 2 existing verticies.
-        /// Meaning adding 2 edges, so that both verticies are a source and a target.
+        /// Adds a weighted undirected edge to the graph between 2 existing verticies
         /// </summary>
         /// <param name="edge"></param>
-        public void AddEdge((T, T) edge)
+        /// <param name="weight"></param>
+        public void AddWeightedEdge((T, T) edge, int weight)
         {
-            if (AdjacencyList.ContainsKey(edge.Item1) && AdjacencyList.ContainsKey(edge.Item2))
+            if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
             {
-                AdjacencyList[edge.Item1].Add(edge.Item2);
-                AdjacencyList[edge.Item2].Add(edge.Item1);
+                WeightedAdjacencyList[edge.Item1].Add(edge.Item2, weight);
+                WeightedAdjacencyList[edge.Item2].Add(edge.Item1, weight);
             }
         }
 
         /// <summary>
-        /// Adds a directed edge to the graph between 2 existing verticies.
+        /// Adds a weighted undirected edge to the graph between 2 existing verticies
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="weight"></param>
+        public void AddEdge((T, T) edge)
+        {
+            if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
+            {
+                WeightedAdjacencyList[edge.Item1].Add(edge.Item2, 1);
+                WeightedAdjacencyList[edge.Item2].Add(edge.Item1, 1);
+            }
+        }
+
+        /// <summary>
+        /// Adds a weighted directed edge to the graph between 2 existing verticies.
+        /// </summary>
+        /// <param name="edge"></param>
+        public void AddWeightedDirectedEdge((T, T) edge, int weight)
+        {
+            if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
+            {
+                WeightedAdjacencyList[edge.Item1].Add(edge.Item2, weight);
+            }
+        }
+
+        /// <summary>
+        /// Adds a weighted directed edge to the graph between 2 existing verticies.
         /// </summary>
         /// <param name="edge"></param>
         public void AddDirectedEdge((T, T) edge)
         {
-            if (AdjacencyList.ContainsKey(edge.Item1) && AdjacencyList.ContainsKey(edge.Item2))
+            if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
             {
-                AdjacencyList[edge.Item1].Add(edge.Item2);
+                WeightedAdjacencyList[edge.Item1].Add(edge.Item2, 1);
             }
         }
+
         /// <summary>
         /// Retuens all nodes reachable from the start posistion
         /// </summary>
@@ -81,7 +121,7 @@ namespace Utilities
         {
             var visited = new HashSet<T>();
 
-            if (!AdjacencyList.ContainsKey(start))
+            if (!WeightedAdjacencyList.ContainsKey(start))
                 return visited;
 
             var queue = new Queue<T>();
@@ -96,7 +136,7 @@ namespace Utilities
 
                 visited.Add(vertex);
 
-                foreach (var neighbor in AdjacencyList[vertex])
+                foreach (var neighbor in WeightedAdjacencyList[vertex].Keys)
                     if (!visited.Contains(neighbor))
                         queue.Enqueue(neighbor);
             }
@@ -114,7 +154,7 @@ namespace Utilities
         {
             var previous = new Dictionary<T, T>();
 
-            if (!AdjacencyList.ContainsKey(start))
+            if (!WeightedAdjacencyList.ContainsKey(start))
                 return null;
 
             var queue = new Queue<T>();
@@ -124,7 +164,7 @@ namespace Utilities
             {
                 var vertex = queue.Dequeue();
 
-                foreach (var neighbor in AdjacencyList[vertex])
+                foreach (var neighbor in WeightedAdjacencyList[vertex].Keys)
                     if (!previous.ContainsKey(neighbor) && !neighbor.Equals(start))
                     {
                         queue.Enqueue(neighbor);
@@ -142,6 +182,41 @@ namespace Utilities
             path.Reverse();
 
             return path;
+        }
+
+        public Dictionary<T, int> DijkstraShortestPath(T start)
+        {
+            // Initialize the distances dictionary
+            var distances = new Dictionary<T, int>();
+            foreach (var vertex in WeightedAdjacencyList.Keys)
+            {
+                distances[vertex] = int.MaxValue;
+            }
+            distances[start] = 0;
+
+            // Create a set to track unvisited nodes
+            var unvisited = new HashSet<T>(WeightedAdjacencyList.Keys);
+
+            while (unvisited.Count > 0)
+            {
+                // Select the unvisited node with the smallest distance
+                T currentVertex = unvisited.OrderBy(v => distances[v]).First();
+
+                // Remove the current vertex from unvisited set
+                unvisited.Remove(currentVertex);
+
+                // Update distances of adjacent vertices
+                foreach (var neighbor in WeightedAdjacencyList[currentVertex].Keys)
+                {
+                    int alternatePathDistance = distances[currentVertex] + WeightedAdjacencyList[currentVertex][neighbor];
+                    if (alternatePathDistance < distances[neighbor])
+                    {
+                        distances[neighbor] = alternatePathDistance;
+                    }
+                }
+            }
+
+            return distances;
         }
     }
 }
