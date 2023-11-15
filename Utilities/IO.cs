@@ -13,6 +13,7 @@ namespace Utilities
             input,
             output
         }
+
         public static int[] ReadInputFileIntArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
@@ -114,9 +115,10 @@ namespace Utilities
 
         private static string GetPath(string day, string puzzle, IOType io)
         {
-            var year = System.Reflection.Assembly.GetEntryAssembly().GetName().Name[^4..];
+            //var year = System.Reflection.Assembly.GetEntryAssembly().GetName().Name[^4..];
+            var year = (new System.Diagnostics.StackTrace()).GetFrames().First(f => f.GetMethod().DeclaringType.Assembly.FullName.Split(",")[0][..^4] == "AdventOfCode").GetMethod().DeclaringType.Assembly.FullName.Split(",")[0][^4..];
 
-            var path = Path.Combine(Environment.CurrentDirectory, $"../../../{day}/{day}_{io}_{puzzle}.txt");
+            var path = Path.Combine(Environment.CurrentDirectory, $"../../../../AdventOfCode{year}/{day}/{day}_{io}_{puzzle}.txt");
             if (!File.Exists(path) && io == IOType.input)
             {
                 HttpWebRequest rq = (HttpWebRequest)WebRequest.Create($"https://adventofcode.com/{year}/day/{day.Substring(3)}/input");
