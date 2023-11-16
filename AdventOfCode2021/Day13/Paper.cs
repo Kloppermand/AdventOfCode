@@ -15,9 +15,9 @@ namespace AdventOfCode2021.Day13
         public Paper(string raw)
         {
             Points = new();
-            var t1 = raw.Split("\r\n\r\n").ToList();
-            Folds = t1.Last().Split("\r\n").ToList();
-            foreach (string point in t1.First().Split("\r\n"))
+            var t1 = raw.Split("\n\n").ToList();
+            Folds = t1.Last().Split("\n").ToList();
+            foreach (string point in t1.First().Split("\n"))
             {
                 var t2 = point.Split(',');
                 Points.Add(new int[2]{ int.Parse(t2.First()),int.Parse(t2.Last())});

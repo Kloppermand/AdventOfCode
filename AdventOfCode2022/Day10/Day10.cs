@@ -51,7 +51,7 @@ namespace AdventOfCode2022.Day10
                 regX += int.Parse(instruction.Split(' ')[1]);
             }
 
-            IO.WriteOutput(day, "b", string.Join('\n',CRT));
+            IO.WriteOutput(day, "b",Letters.Interpret4x6Letters(string.Join('\n',CRT)));
         }
 
         private static int GetResultPart(int cycle, int regX)

@@ -18,7 +18,7 @@ namespace AdventOfCode2021.Day11
 
             for (int step = 0; step < nSteps; step++)
             {
-                explosions = DoStep(grid);
+                explosions += DoStep(grid);
             }
 
             IO.WriteOutput(day, "a", explosions.ToString());

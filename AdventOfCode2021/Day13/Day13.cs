@@ -33,7 +33,7 @@ namespace AdventOfCode2021.Day13
             paper.RemoveDuplicates();
             
 
-            string result = paper.ToString();
+            string result = Letters.Interpret4x6Letters(paper.ToString());
             IO.WriteOutput(day, "b", result);
         }
     }

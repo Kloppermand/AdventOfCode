@@ -60,21 +60,21 @@ namespace Utilities
         {
             string path = GetPath(day, puzzle, IOType.input);
             string data = File.ReadAllText(path);
-            return data;
+            return data.Replace("\r", "");
         }
 
         public static string ReadInputFileString(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
             string data = File.ReadAllText(path).Trim();
-            return data;
+            return data.Replace("\r", "");
         }
 
         public static char[] ReadInputFileCharArray(string day, string puzzle)
         {
             string path = GetPath(day, puzzle, IOType.input);
             string data = File.ReadAllText(path);
-            return data.Trim().ToCharArray();
+            return data.Replace("\r", "").Trim().ToCharArray();
         }
         public static string[] ReadInputFileStringArray(string day, string puzzle)
         {
