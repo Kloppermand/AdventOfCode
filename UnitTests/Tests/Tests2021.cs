@@ -235,5 +235,21 @@ namespace UnitTests.Tests2021
             var result = File.ReadAllText(Path.Combine(root, "Day14/Day14_output_b.txt"));
             Assert.That(result, Is.EqualTo("3528317079545"));
         }
+
+        [Test]
+        public void Day15A()
+        {
+            aoc.Day15.Day15.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_a.txt"));
+            Assert.That(result, Is.EqualTo("621"));
+        }
+
+        [Test]
+        public void Day15B()
+        {
+            aoc.Day15.Day15.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_b.txt"));
+            Assert.That(result, Is.EqualTo("2904"));
+        }
     }
 }

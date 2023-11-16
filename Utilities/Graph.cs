@@ -184,39 +184,61 @@ namespace Utilities
             return path;
         }
 
-        public Dictionary<T, int> DijkstraShortestPath(T start)
+        public List<(T node, int distance)> DijkstraShortestPath(T start, T end)
         {
-            // Initialize the distances dictionary
+            var previousNodes = new Dictionary<T, T>();
             var distances = new Dictionary<T, int>();
+            var queue = new SortedDictionary<int, Queue<T>>();
+
             foreach (var vertex in WeightedAdjacencyList.Keys)
             {
-                distances[vertex] = int.MaxValue;
+                if (vertex.Equals(start))
+                {
+                    distances[vertex] = 0;
+                    queue[0] = new Queue<T>();
+                    queue[0].Enqueue(start);
+                }
+                else
+                {
+                    distances[vertex] = int.MaxValue;
+                }
             }
-            distances[start] = 0;
 
-            // Create a set to track unvisited nodes
-            var unvisited = new HashSet<T>(WeightedAdjacencyList.Keys);
-
-            while (unvisited.Count > 0)
+            while (queue.Count > 0)
             {
-                // Select the unvisited node with the smallest distance
-                T currentVertex = unvisited.OrderBy(v => distances[v]).First();
+                var currentDistance = queue.First().Key;
+                var currentVertex = queue.First().Value.Dequeue();
+                if (queue.First().Value.Count == 0)
+                {
+                    queue.Remove(currentDistance);
+                }
 
-                // Remove the current vertex from unvisited set
-                unvisited.Remove(currentVertex);
-
-                // Update distances of adjacent vertices
                 foreach (var neighbor in WeightedAdjacencyList[currentVertex].Keys)
                 {
                     int alternatePathDistance = distances[currentVertex] + WeightedAdjacencyList[currentVertex][neighbor];
                     if (alternatePathDistance < distances[neighbor])
                     {
                         distances[neighbor] = alternatePathDistance;
+                        previousNodes[neighbor] = currentVertex;
+
+                        if (!queue.ContainsKey(alternatePathDistance))
+                        {
+                            queue[alternatePathDistance] = new Queue<T>();
+                        }
+                        queue[alternatePathDistance].Enqueue(neighbor);
                     }
                 }
             }
 
-            return distances;
+            var shortestPath = new List<(T, int)>();
+            var currentNode = end;
+            while (currentNode != null && previousNodes.ContainsKey(currentNode))
+            {
+                shortestPath.Insert(0, (currentNode, distances[currentNode]));
+                currentNode = previousNodes[currentNode];
+            }
+
+            return shortestPath;
         }
     }
 }
