@@ -53,6 +53,11 @@ namespace Utilities
             return Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
         }
 
+        public bool IsInRectangle(Point lowerLeftCorner, Point upperRightCorner)
+        {
+            return (X >= lowerLeftCorner.X && X <= upperRightCorner.X) && (Y >= lowerLeftCorner.Y && Y <= upperRightCorner.Y);
+        }
+
         public override string ToString()
         {
             return $"({X},{Y})";

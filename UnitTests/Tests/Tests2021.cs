@@ -251,6 +251,7 @@ namespace UnitTests.Tests2021
             var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_b.txt"));
             Assert.That(result, Is.EqualTo("2904"));
         }
+
         [Test]
         public void Day16A()
         {
@@ -265,6 +266,22 @@ namespace UnitTests.Tests2021
             aoc.Day16.Day16.CalculateB();
             var result = File.ReadAllText(Path.Combine(root, "Day16/Day16_output_b.txt"));
             Assert.That(result, Is.EqualTo("9485076995911"));
+        }
+
+        [Test]
+        public void Day17A()
+        {
+            aoc.Day17.Day17.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day17/Day17_output_a.txt"));
+            Assert.That(result, Is.EqualTo("4278"));
+        }
+
+        [Test]
+        public void Day17B()
+        {
+            aoc.Day17.Day17.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day17/Day17_output_b.txt"));
+            Assert.That(result, Is.EqualTo("1994"));
         }
     }
 }

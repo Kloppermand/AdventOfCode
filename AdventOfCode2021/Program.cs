@@ -51,8 +51,11 @@ namespace AdventOfCode2021
             //Day15.Day15.CalculateA();
             //Day15.Day15.CalculateB();
 
-            Day16.Day16.CalculateA();
-            Day16.Day16.CalculateB();
+            //Day16.Day16.CalculateA();
+            //Day16.Day16.CalculateB();
+
+            Day17.Day17.CalculateA();
+            Day17.Day17.CalculateB();
         }
     }
 }
