@@ -28,37 +28,37 @@ namespace UnitTests.Tests2023
             Assert.That(result, Is.EqualTo("56017"));
         }
 
-        //[Test]
-        //public void Day2A()
-        //{
-        //    aoc.Day2.Day2.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day2/Day2_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day2A()
+        {
+            aoc.Day2.Day2.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day2/Day2_output_a.txt"));
+            Assert.That(result, Is.EqualTo("2406"));
+        }
 
-        //[Test]
-        //public void Day2B()
-        //{
-        //    aoc.Day2.Day2.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day2/Day2_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("vaaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day2B()
+        {
+            aoc.Day2.Day2.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day2/Day2_output_b.txt"));
+            Assert.That(result, Is.EqualTo("78375"));
+        }
 
-        //[Test]
-        //public void Day3A()
-        //{
-        //    aoc.Day3.Day3.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day3A()
+        {
+            aoc.Day3.Day3.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_a.txt"));
+            Assert.That(result, Is.EqualTo("520019"));
+        }
 
-        //[Test]
-        //public void Day3B()
-        //{
-        //    aoc.Day3.Day3.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day3B()
+        {
+            aoc.Day3.Day3.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_b.txt"));
+            Assert.That(result, Is.EqualTo("75519888"));
+        }
 
         //[Test]
         //public void Day4A()
