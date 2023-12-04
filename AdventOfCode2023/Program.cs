@@ -12,11 +12,11 @@ namespace AdventOfCode2023
             //Day2.Day2.CalculateA();
             //Day2.Day2.CalculateB();
 
-            Day3.Day3.CalculateA();
-            Day3.Day3.CalculateB();
+            //Day3.Day3.CalculateA();
+            //Day3.Day3.CalculateB();
 
-            //Day4.Day4.CalculateA();
-            //Day4.Day4.CalculateB();
+            Day4.Day4.CalculateA();
+            Day4.Day4.CalculateB();
 
             //Day5.Day5.CalculateA();
             //Day5.Day5.CalculateB();
