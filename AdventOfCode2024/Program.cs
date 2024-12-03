@@ -31,7 +31,7 @@ namespace AdventOfCode2024
                     sw.Restart();
                     part.Invoke(null, null);
                     sw.Stop();
-                    Console.WriteLine($"{namespaceName} {day.Name} {part.Name} ran in approx. {sw.ElapsedMilliseconds / 1000} s");
+                    Console.WriteLine($"{namespaceName} {day.Name} {part.Name} ran in approximately {sw.ElapsedMilliseconds / 1000, 5} s");
                 }
                 Console.WriteLine();
             }
