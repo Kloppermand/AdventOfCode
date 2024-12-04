@@ -22,6 +22,9 @@ namespace AdventOfCode2024.Day3
         public static void CalculateB()
         {
             var input = IO.ReadInputFileString(day, "a");
+            // Oneliner not quite working
+            //var result = new Regex("(?<ignore>don't\\(\\).*?(do\\(\\)|$))|mul\\((?<a>\\d{1,3}),(?<b>\\d{1,3})\\)").Matches(input).Where(match => !match.Groups["ignore"].Success).Sum(match => int.Parse(match.Groups["a"].Value) * int.Parse(match.Groups["b"].Value));
+
             int result = 0;
 
             Regex regex = new Regex("mul\\((?<a>\\d{1,3}),(?<b>\\d{1,3})\\)|do\\(\\)|don't\\(\\)");
@@ -36,7 +39,7 @@ namespace AdventOfCode2024.Day3
                     result += int.Parse(match.Groups["a"].Value) * int.Parse(match.Groups["b"].Value);
             }
 
-            IO.WriteOutput(day, "b", result);
+            IO.WriteOutput(day, "b", 00);
         }
     }
 }
