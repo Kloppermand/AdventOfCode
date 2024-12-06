@@ -113,6 +113,26 @@ namespace Utilities
         }
 
         /// <summary>
+        /// Adds a weighted directed edge to the graph between 2 existing verticies.
+        /// If the verticies doesn't exist it will create them.
+        /// </summary>
+        /// <param name="edge"></param>
+        public void AddDirectedEdge_Force((T, T) edge)
+        {
+            AddVertex(edge.Item1);
+            AddVertex(edge.Item2);
+            AddDirectedEdge(edge);
+        }
+
+        public bool PointsTo(T source, T target)
+        {
+            if (WeightedAdjacencyList.ContainsKey(source))
+                return WeightedAdjacencyList[source].ContainsKey(target);
+
+            return false;
+        }
+
+        /// <summary>
         /// Retuens all nodes reachable from the start posistion
         /// </summary>
         /// <param name="start"></param>
