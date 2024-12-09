@@ -9,6 +9,7 @@ namespace AdventOfCode2024.Day6
     public static class Day6
     {
         private static string day = MethodBase.GetCurrentMethod().DeclaringType.Name;
+        static HashSet<(int, int)> visited_A = new();
 
         public static void CalculateA()
         {
@@ -16,7 +17,6 @@ namespace AdventOfCode2024.Day6
             var dir = (-1, 0);
             Dictionary<(int, int), (int, int)> dirChange = new() { { (-1, 0), (0, 1) }, { (0, 1), (1, 0) }, { (1, 0), (0, -1) }, { (0, -1), (-1, 0) } };
             (int, int) pos = (0, 0);
-            HashSet<(int, int)> visited = new();
 
             int h = input.Length;
             int w = input[0].Length;
@@ -32,7 +32,7 @@ namespace AdventOfCode2024.Day6
 
             while (true)
             {
-                visited.Add(pos);
+                visited_A.Add(pos);
                 var look = (pos.Item1 + dir.Item1, pos.Item2 + dir.Item2);
                 if (look.Item1 < 0 || look.Item1 >= h || look.Item2 < 0 || look.Item2 >= w)
                     break;
@@ -43,7 +43,7 @@ namespace AdventOfCode2024.Day6
                     dir = dirChange[dir];
             }
 
-            IO.WriteOutput(day, "a", visited.Count);
+            IO.WriteOutput(day, "a", visited_A.Count);
         }
         public static void CalculateB()
         {
@@ -69,6 +69,9 @@ namespace AdventOfCode2024.Day6
             {
                 for (int j = 0; j < w; j++)
                 {
+                    if (input[i][j] == '#' || !visited_A.Contains((i,j)))
+                        continue;
+
                     HashSet<((int, int), (int, int))> visited = new();
                     (int, int) pos = originalPos;
                     dir = (-1, 0);
