@@ -14,6 +14,7 @@ namespace Utilities
         public int Y { get; set; }
         public int IntValue { get; set; }
         public string StringValue { get; set; }
+        public char CharValue { get; set; }
 
         public Point()
         {
@@ -66,6 +67,21 @@ namespace Utilities
         public static Point operator +(Point a, Point b)
         {
             return new Point(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static Point operator -(Point a, Point b)
+        {
+            return new Point(a.X - b.X, a.Y - b.Y);
+        }
+
+        public static Point operator *(Point a, int b)
+        {
+            return new Point(a.X * b, a.Y * b);
+        }
+
+        public static Point operator *(int a, Point b)
+        {
+            return b * a;
         }
         public static bool operator ==(Point a, Point b)
         {
