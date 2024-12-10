@@ -36,22 +36,57 @@ namespace AdventOfCode2024.Day9
 
         public static void CalculateB()
         {
-            var input = "23331331214141314020";// IO.ReadInputFileString(day, "a") + "0";
-            int result = 0;
-            List<(int id, int size)> files = new();
-            List<IntRange> free = new();
-            int ind = 0;
+            var input = "436232512020";// IO.ReadInputFileString(day, "a") + "0";
+            long result = 0;
+            List<(int id, int file, int space)> fileSystem = new();
+            List<(int id, int file, int space)> fileSystemRev = new();
 
-            for (int i = 0;i < input.Length;i+=2) 
+            for (int i = 0; i < input.Length; i += 2)
             {
-                var tmpFile = (i / 2, input[i] - 0x30);
-                var tmpRange = IntRange.GetFromLength(ind + tmpFile.Item2, input[i + 1] - 0x30);
-                files.Add(tmpFile);
-                free.Add(tmpRange);
-                ind += tmpFile.Item2 + tmpRange.Length;
+                fileSystem.Add((i / 2, input[i] - 0x30, input[i + 1] - 0x30));
+                fileSystemRev.Add((i / 2, input[i] - 0x30, input[i + 1] - 0x30));
             }
 
-           
+            fileSystemRev.Reverse();
+            Console.WriteLine(MakeString(fileSystem));
+            foreach (var file_ori in fileSystemRev)
+            {
+                try
+                {
+                    var file = fileSystem.First(x => x.id == file_ori.id);
+                    var space = fileSystem.First(x => x.space >= file.file);
+                    var spaceIndex = fileSystem.FindIndex(x => x.id == space.id);
+                    if (spaceIndex >= fileSystem.FindIndex(x => x.id == file.id))
+                        continue;
+
+                    var prevFileIndex = fileSystem.FindIndex(x => x.id == file.id) - 1;
+                    var tmp = fileSystem[prevFileIndex];
+                    fileSystem[spaceIndex] = (space.id, space.file, 0);
+                    fileSystem[prevFileIndex] = (tmp.id, tmp.file, tmp.space + file.file + file.space);
+                    fileSystem.Insert(spaceIndex + 1, (file.id, file.file, space.space - file.file));
+                    fileSystem.RemoveAt(fileSystem.FindLastIndex(x => x.id == file.id));
+
+                    Console.WriteLine(MakeString(fileSystem));
+                }
+                catch { }
+            }
+
+            List<int> lst = new();
+
+            foreach (var file in fileSystem)
+            {
+                for (int i = 0; i < file.file; i++)
+                    lst.Add(file.id);
+
+                for (int i = 0; i < file.space; i++)
+                    lst.Add(0);
+            }
+
+            for (int i = 0; i < lst.Count; i++)
+            {
+                result += i * lst[i];
+            }
+
             IO.WriteOutput(day, "b", result);
         }
 
