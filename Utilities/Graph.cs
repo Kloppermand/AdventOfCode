@@ -114,6 +114,15 @@ namespace Utilities
 
         /// <summary>
         /// Adds a weighted directed edge to the graph between 2 existing verticies.
+        /// </summary>
+        /// <param name="edge"></param>
+        public void AddDirectedEdge(T vertex1, T vertex2)
+        {
+            AddDirectedEdge((vertex1, vertex2));
+        }
+
+        /// <summary>
+        /// Adds a weighted directed edge to the graph between 2 existing verticies.
         /// If the verticies doesn't exist it will create them.
         /// </summary>
         /// <param name="edge"></param>
@@ -122,6 +131,18 @@ namespace Utilities
             AddVertex(edge.Item1);
             AddVertex(edge.Item2);
             AddDirectedEdge(edge);
+        }
+
+        /// <summary>
+        /// Adds a weighted directed edge to the graph between 2 existing verticies.
+        /// If the verticies doesn't exist it will create them.
+        /// </summary>
+        /// <param name="edge"></param>
+        public void AddDirectedEdge_Force(T vertex1, T vertex2)
+        {
+            AddVertex(vertex1);
+            AddVertex(vertex2);
+            AddDirectedEdge(vertex1, vertex2);
         }
 
         public bool PointsTo(T source, T target)
