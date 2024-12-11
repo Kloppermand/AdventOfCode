@@ -36,7 +36,7 @@ namespace AdventOfCode2024.Day9
 
         public static void CalculateB()
         {
-            var input = "436232512020";// IO.ReadInputFileString(day, "a") + "0";
+            var input = IO.ReadInputFileString(day, "a") + "0";
             long result = 0;
             List<(int id, int file, int space)> fileSystem = new();
             List<(int id, int file, int space)> fileSystemRev = new();
@@ -48,9 +48,10 @@ namespace AdventOfCode2024.Day9
             }
 
             fileSystemRev.Reverse();
-            Console.WriteLine(MakeString(fileSystem));
+            //Console.WriteLine(MakeString(fileSystem));
             foreach (var file_ori in fileSystemRev)
             {
+                int sameOrderOffset = 0;
                 try
                 {
                     var file = fileSystem.First(x => x.id == file_ori.id);
@@ -60,13 +61,18 @@ namespace AdventOfCode2024.Day9
                         continue;
 
                     var prevFileIndex = fileSystem.FindIndex(x => x.id == file.id) - 1;
+                    if (prevFileIndex == spaceIndex)
+                    {
+                        prevFileIndex += space.file;
+                        sameOrderOffset = file.space + file.file;
+                    }
                     var tmp = fileSystem[prevFileIndex];
                     fileSystem[spaceIndex] = (space.id, space.file, 0);
                     fileSystem[prevFileIndex] = (tmp.id, tmp.file, tmp.space + file.file + file.space);
-                    fileSystem.Insert(spaceIndex + 1, (file.id, file.file, space.space - file.file));
+                    fileSystem.Insert(spaceIndex + 1, (file.id, file.file, space.space - file.file + sameOrderOffset));
                     fileSystem.RemoveAt(fileSystem.FindLastIndex(x => x.id == file.id));
 
-                    Console.WriteLine(MakeString(fileSystem));
+                    //Console.WriteLine(MakeString(fileSystem));
                 }
                 catch { }
             }
@@ -86,6 +92,8 @@ namespace AdventOfCode2024.Day9
             {
                 result += i * lst[i];
             }
+
+            Console.WriteLine(MakeString(fileSystem));
 
             IO.WriteOutput(day, "b", result);
         }
