@@ -81,10 +81,25 @@ namespace Utilities
         /// <param name="weight"></param>
         public void AddEdge((T, T) edge)
         {
-            if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
+            AddEdge(edge.Item1, edge.Item2);
+            //if (WeightedAdjacencyList.ContainsKey(edge.Item1) && WeightedAdjacencyList.ContainsKey(edge.Item2))
+            //{
+            //    WeightedAdjacencyList[edge.Item1].Add(edge.Item2, 1);
+            //    WeightedAdjacencyList[edge.Item2].Add(edge.Item1, 1);
+            //}
+        }
+
+        /// <summary>
+        /// Adds a weighted undirected edge to the graph between 2 existing verticies
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="weight"></param>
+        public void AddEdge(T vertex1, T vertex2)
+        {
+            if (WeightedAdjacencyList.ContainsKey(vertex1) && WeightedAdjacencyList.ContainsKey(vertex2))
             {
-                WeightedAdjacencyList[edge.Item1].Add(edge.Item2, 1);
-                WeightedAdjacencyList[edge.Item2].Add(edge.Item1, 1);
+                WeightedAdjacencyList[vertex1].Add(vertex2, 1);
+                WeightedAdjacencyList[vertex2].Add(vertex1, 1);
             }
         }
 
