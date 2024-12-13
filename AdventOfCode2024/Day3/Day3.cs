@@ -39,7 +39,7 @@ namespace AdventOfCode2024.Day3
                     result += int.Parse(match.Groups["a"].Value) * int.Parse(match.Groups["b"].Value);
             }
 
-            IO.WriteOutput(day, "b", 00);
+            IO.WriteOutput(day, "b", result);
         }
     }
 }
