@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Utilities;
 
 namespace AdventOfCode2024.Day12
@@ -9,11 +10,12 @@ namespace AdventOfCode2024.Day12
     public static class Day12
     {
         private static string day = MethodBase.GetCurrentMethod().DeclaringType.Name;
+        private static Graph<Point> map = new();
+        private static List<List<KeyValuePair<Point, Dictionary<Point, int>>>> regionList = new();
 
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-            Graph<Point> map = new();
 
             for (int i = 0; i < input.Length; i++)
             {
@@ -47,7 +49,6 @@ namespace AdventOfCode2024.Day12
                 }
             }
 
-            List<List<KeyValuePair<Point, Dictionary<Point, int>>>> regionList = new();
             for (int i = 1; i < region; i++)
             {
                 regionList.Add(map.WeightedAdjacencyList.Where(x => x.Key.StringValue == i.ToString()).ToList());
@@ -57,7 +58,7 @@ namespace AdventOfCode2024.Day12
             foreach (var reg in regionList)
             {
                 int fences = 0;
-                foreach(var node in reg)
+                foreach (var node in reg)
                 {
                     fences += 4 - node.Value.Count;
                 }
@@ -69,10 +70,65 @@ namespace AdventOfCode2024.Day12
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
+            int h = input.Length;
+            int width = input[0].Length;
+            int result = 0;
+            foreach (var reg in regionList)
+            {
+                int fences = 0;
+                foreach (var node in reg)
+                {
+                    if (node.Value.Count == 1) { fences += 2; continue; }
+                    bool nw = false;
+                    bool n = false;
+                    bool ne = false;
+                    bool w = false;
+                    bool e = false;
+                    bool sw = false;
+                    bool s = false;
+                    bool se = false;
+                    if (node.Key.Y > 0)
+                    {
+                        if (node.Key.X > 0)
+                            sw = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X - 1, node.Key.Y - 1)).Key.CharValue == node.Key.CharValue;
+                        s = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X, node.Key.Y - 1)).Key.CharValue == node.Key.CharValue;
+                        if (node.Key.X < h - 1)
+                            se = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X + 1, node.Key.Y - 1)).Key.CharValue == node.Key.CharValue;
+                    }
+                    if (node.Key.X > 0)
+                        w = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X - 1, node.Key.Y)).Key.CharValue == node.Key.CharValue;
+                    if (node.Key.X < h - 1)
+                        e = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X + 1, node.Key.Y)).Key.CharValue == node.Key.CharValue;
+                    if (node.Key.Y < (width - 1))
+                    {
+                        if (node.Key.X > 0)
+                            nw = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X - 1, node.Key.Y + 1)).Key.CharValue == node.Key.CharValue;
+                        n = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X, node.Key.Y + 1)).Key.CharValue == node.Key.CharValue;
+                        if (node.Key.X < h - 1)
+                            ne = map.WeightedAdjacencyList.First(x => x.Key == new Point(node.Key.X + 1, node.Key.Y + 1)).Key.CharValue == node.Key.CharValue;
+                    }
+                    if (n && e && !ne)
+                        fences++;
+                    if (s && e && !se)
+                        fences++;
+                    if (n && w && !nw)
+                        fences++;
+                    if (s && w && !sw)
+                        fences++;
+
+                    if (!n && !e)
+                        fences++;
+                    if (!s && !e)
+                        fences++;
+                    if (!n && !w)
+                        fences++;
+                    if (!s && !w)
+                        fences++;
+                }
+                result += reg.Count * fences;
+            }
 
 
-
-            string result = "NOT SOLVED YET";
             IO.WriteOutput(day, "b", result);
         }
 

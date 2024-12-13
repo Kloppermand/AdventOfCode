@@ -148,13 +148,13 @@ namespace UnitTests.Tests2024
             Assert.That(result, Is.EqualTo("6435922584968"));
         }
 
-        //[Test]
-        //public void Day9B()
-        //{
-        //    aoc.Day9.Day9.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day9/Day9_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day9B()
+        {
+            aoc.Day9.Day9.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day9/Day9_output_b.txt"));
+            Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
+        }
 
         [Test]
         public void Day10A()
