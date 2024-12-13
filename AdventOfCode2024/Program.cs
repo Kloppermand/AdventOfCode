@@ -19,7 +19,7 @@ namespace AdventOfCode2024
 
         static void RunAll()
         {
-        string[] runFilter = {};
+        string[] runFilter = {"13"};
             Stopwatch sw = new Stopwatch();
             string namespaceName = typeof(Program).Namespace;
             var classes = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(x => x.Namespace.StartsWith(namespaceName) && Regex.IsMatch(x.Name, @"Day(\d{1}|\d{2})"));
