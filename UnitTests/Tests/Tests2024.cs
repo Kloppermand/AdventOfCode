@@ -148,13 +148,13 @@ namespace UnitTests.Tests2024
             Assert.That(result, Is.EqualTo("6435922584968"));
         }
 
-        [Test]
-        public void Day9B()
-        {
-            aoc.Day9.Day9.CalculateB();
-            var result = File.ReadAllText(Path.Combine(root, "Day9/Day9_output_b.txt"));
-            Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        }
+        //[Test]
+        //public void Day9B()
+        //{
+        //    aoc.Day9.Day9.CalculateB();
+        //    var result = File.ReadAllText(Path.Combine(root, "Day9/Day9_output_b.txt"));
+        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
+        //}
 
         [Test]
         public void Day10A()
@@ -196,13 +196,13 @@ namespace UnitTests.Tests2024
             Assert.That(result, Is.EqualTo("1319878"));
         }
 
-        //[Test]
-        //public void Day12B()
-        //{
-        //    aoc.Day12.Day12.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day12/Day12_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day12B()
+        {
+            aoc.Day12.Day12.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day12/Day12_output_b.txt"));
+            Assert.That(result, Is.EqualTo("784982"));
+        }
 
         [Test]
         public void Day13A()
@@ -220,36 +220,36 @@ namespace UnitTests.Tests2024
             Assert.That(result, Is.EqualTo("104958599303720"));
         }
 
-        //[Test]
-        //public void Day14A()
-        //{
-        //    aoc.Day14.Day14.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day14/Day14_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day14A()
+        {
+            aoc.Day14.Day14.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day14/Day14_output_a.txt"));
+            Assert.That(result, Is.EqualTo("224438715"));
+        }
 
-        //[Test]
-        //public void Day14B()
-        //{
-        //    aoc.Day14.Day14.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day14/Day14_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day14B()
+        {
+            aoc.Day14.Day14.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day14/Day14_output_b.txt"));
+            Assert.That(result, Is.EqualTo("7603"));
+        }
 
-        //[Test]
-        //public void Day15A()
-        //{
-        //    aoc.Day15.Day15.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day15A()
+        {
+            aoc.Day15.Day15.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_a.txt"));
+            Assert.That(result, Is.EqualTo("1446158"));
+        }
 
-        //[Test]
-        //public void Day15B()
-        //{
-        //    aoc.Day15.Day15.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("aaaaaaaaaaaaaa"));
-        //}
+        [Test]
+        public void Day15B()
+        {
+            aoc.Day15.Day15.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day15/Day15_output_b.txt"));
+            Assert.That(result, Is.EqualTo("1446175"));
+        }
     }
 }
