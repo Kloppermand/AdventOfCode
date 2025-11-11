@@ -6,8 +6,8 @@ namespace AdventOfCode2018
     {
         static void Main(string[] args)
         {
-            Day1.Day1.CalculateA();
-            Day1.Day1.CalculateB();
+            //Day1.Day1.CalculateA();
+            //Day1.Day1.CalculateB();
 
             //Day2.Day2.CalculateA();
             //Day2.Day2.CalculateB();
@@ -21,8 +21,8 @@ namespace AdventOfCode2018
             //Day5.Day5.CalculateA();
             //Day5.Day5.CalculateB();
 
-            //Day6.Day6.CalculateA();
-            //Day6.Day6.CalculateB();
+            Day6.Day6.CalculateA();
+            Day6.Day6.CalculateB();
         }
     }
 }
