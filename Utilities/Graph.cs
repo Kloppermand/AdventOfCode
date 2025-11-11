@@ -296,5 +296,350 @@ namespace Utilities
 
             return shortestPath;
         }
+
+        public void Print(int width = 80, int height = 25, int labelMaxLength = 6)
+        {
+            // Ensure sensible minimums
+            if (width < 10) width = 10;
+            if (height < 5) height = 5;
+
+            // Auto-expand to a larger visualization if caller used defaults.
+            try
+            {
+                if (width == 80)
+                {
+                    if (!Console.IsOutputRedirected && Console.WindowWidth > 0)
+                        width = Math.Min(Math.Max(width, Console.WindowWidth - 4), 160);
+                    else
+                        width = Math.Min(Math.Max(width, 120), 200);
+                }
+
+                if (height == 25)
+                {
+                    if (!Console.IsOutputRedirected && Console.WindowHeight > 0)
+                        height = Math.Min(Math.Max(height, Console.WindowHeight - 4), 60);
+                    else
+                        height = Math.Min(Math.Max(height, 36), 80);
+                }
+            }
+            catch
+            {
+                // Fallback larger safe defaults on platforms where console dimensions can't be read
+                if (width == 80) width = 120;
+                if (height == 25) height = 36;
+            }
+
+            if (WeightedAdjacencyList.Count == 0)
+            {
+                Console.WriteLine("[Graph is empty]");
+                return;
+            }
+
+            var nodes = WeightedAdjacencyList.Keys.ToList();
+            int n = nodes.Count;
+            double cx = (width - 1) / 2.0;
+            double cy = (height - 1) / 2.0;
+            // Use more of the available area to spread nodes farther out
+            double r = Math.Max(4.0, Math.Min(width, height) / 2.0 - 1.0);
+
+            // Horizontal stretching factor to make the circle 3x as wide
+            double horizontalScale = 3.0;
+            double rx = r * horizontalScale;
+            double ry = r;
+
+            var positions = new Dictionary<T, (int x, int y)>();
+            var used = new HashSet<(int x, int y)>();
+
+            for (int i = 0; i < n; i++)
+            {
+                double angle = 2.0 * Math.PI * i / n;
+                int x = (int)Math.Round(cx + rx * Math.Cos(angle));
+                int y = (int)Math.Round(cy + ry * Math.Sin(angle));
+                x = Clamp(x, 0, width - 1);
+                y = Clamp(y, 0, height - 1);
+
+                // Nudge if collision; allow larger nudges and more attempts to reduce overlap
+                int attempts = 0;
+                while (used.Contains((x, y)) && attempts < 500)
+                {
+                    // wider deterministic nudge to spread nodes
+                    int dx = ((attempts % 9) - 4); // -4..4
+                    int dy = (((attempts + 3) % 9) - 4);
+                    // biased nudge based on node index to avoid clustering
+                    x = Clamp(x + dx + ((i % 3) - 1), 0, width - 1);
+                    y = Clamp(y + dy + (((i + 1) % 3) - 1), 0, height - 1);
+                    attempts++;
+                }
+
+                positions[nodes[i]] = (x, y);
+                used.Add((x, y));
+            }
+
+            // connection mask grid: bits N=1, E=2, S=4, W=8
+            var conn = new int[height, width];
+            // overlay for arrows (directed edge heads) - using simple ascii arrows: '>' '<' 'v' '^'
+            var arrowOverlay = new char[height, width];
+            for (int yy = 0; yy < height; yy++)
+                for (int xx = 0; xx < width; xx++)
+                {
+                    conn[yy, xx] = 0;
+                    arrowOverlay[yy, xx] = '\0';
+                }
+
+            var indexOf = new Dictionary<T, int>();
+            for (int i = 0; i < nodes.Count; i++)
+                indexOf[nodes[i]] = i;
+
+            // Bresenham line helper that returns list of points including endpoints
+            List<(int x, int y)> GetLinePoints(int x0, int y0, int x1, int y1)
+            {
+                var points = new List<(int x, int y)>();
+                int dx = Math.Abs(x1 - x0);
+                int sx = x0 < x1 ? 1 : -1;
+                int dy = -Math.Abs(y1 - y0);
+                int sy = y0 < y1 ? 1 : -1;
+                int err = dx + dy;
+                int x = x0, y = y0;
+                while (true)
+                {
+                    points.Add((x, y));
+                    if (x == x1 && y == y1) break;
+                    int e2 = 2 * err;
+                    if (e2 >= dy)
+                    {
+                        err += dy;
+                        x += sx;
+                    }
+                    if (e2 <= dx)
+                    {
+                        err += dx;
+                        y += sy;
+                    }
+                }
+                return points;
+            }
+
+            static int DirBit((int x, int y) a, (int x, int y) b)
+            {
+                if (b.x == a.x && b.y == a.y - 1) return 1; // N
+                if (b.x == a.x + 1 && b.y == a.y) return 2; // E
+                if (b.x == a.x && b.y == a.y + 1) return 4; // S
+                if (b.x == a.x - 1 && b.y == a.y) return 8; // W
+                // For diagonal steps (rare with Bresenham), approximate by choosing dominant direction
+                int dx = b.x - a.x;
+                int dy = b.y - a.y;
+                if (Math.Abs(dx) > Math.Abs(dy)) return dx > 0 ? 2 : 8;
+                return dy > 0 ? 4 : 1;
+            }
+
+            // Add connections for each edge
+            foreach (var src in WeightedAdjacencyList.Keys)
+            {
+                foreach (var tgt in WeightedAdjacencyList[src].Keys)
+                {
+                    if (!positions.ContainsKey(src) || !positions.ContainsKey(tgt)) continue;
+                    var a = positions[src];
+                    var b = positions[tgt];
+
+                    bool reverseExists = WeightedAdjacencyList.ContainsKey(tgt) && WeightedAdjacencyList[tgt].ContainsKey(src);
+                    if (reverseExists)
+                    {
+                        // Draw only once for bidirectional pairs
+                        if (indexOf[src] > indexOf[tgt]) continue;
+                    }
+
+                    var pts = GetLinePoints(a.x, a.y, b.x, b.y);
+                    for (int i = 0; i < pts.Count - 1; i++)
+                    {
+                        var p = pts[i];
+                        var q = pts[i + 1];
+                        if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) continue;
+                        if (q.x < 0 || q.x >= width || q.y < 0 || q.y >= height) continue;
+                        int bitP = DirBit(p, q);
+                        int bitQ = DirBit(q, p);
+                        conn[p.y, p.x] |= bitP;
+                        conn[q.y, q.x] |= bitQ;
+                    }
+
+                    // For directed edges, place an arrow one step before target (if possible)
+                    if (!reverseExists)
+                    {
+                        if (pts.Count >= 2)
+                        {
+                            var beforeTarget = pts[pts.Count - 2];
+                            var targetPoint = pts[pts.Count - 1];
+                            // choose arrow char based on direction from beforeTarget -> targetPoint
+                            char arr;
+                            int dx = targetPoint.x - beforeTarget.x;
+                            int dy = targetPoint.y - beforeTarget.y;
+                            if (Math.Abs(dx) >= Math.Abs(dy))
+                                arr = dx >= 0 ? '>' : '<';
+                            else
+                                arr = dy >= 0 ? 'v' : '^';
+
+                            // store arrow overlay (do not overwrite existing arrow)
+                            if (beforeTarget.x >= 0 && beforeTarget.x < width && beforeTarget.y >= 0 && beforeTarget.y < height)
+                            {
+                                if (arrowOverlay[beforeTarget.y, beforeTarget.x] == '\0')
+                                    arrowOverlay[beforeTarget.y, beforeTarget.x] = arr;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Convert connection masks to characters (box-drawing)
+            char MaskToChar(int mask)
+            {
+                // bits: N=1, E=2, S=4, W=8
+                return mask switch
+                {
+                    0 => ' ',
+                    1 => '│',
+                    2 => '─',
+                    3 => '└',     // N+E
+                    4 => '│',
+                    5 => '│',     // N+S
+                    6 => '┌',     // E+S
+                    7 => '├',     // N+E+S
+                    8 => '─',
+                    9 => '┘',     // N+W
+                    10 => '─',    // E+W
+                    11 => '┴',    // N+E+W
+                    12 => '┐',    // S+W
+                    13 => '┤',    // N+S+W
+                    14 => '┬',    // E+S+W
+                    15 => '┼',    // all
+                    _ => ' ',
+                };
+            }
+
+            // Build grid base from conn masks, then overlay arrows (arrows take precedence)
+            var grid = new char[height, width];
+            for (int yy = 0; yy < height; yy++)
+            {
+                for (int xx = 0; xx < width; xx++)
+                {
+                    grid[yy, xx] = MaskToChar(conn[yy, xx]);
+                    if (arrowOverlay[yy, xx] != '\0')
+                        grid[yy, xx] = arrowOverlay[yy, xx];
+                }
+            }
+
+            // Draw nodes and labels (nodes take precedence over lines)
+            foreach (var kv in positions)
+            {
+                var node = kv.Key;
+                int x = kv.Value.x;
+                int y = kv.Value.y;
+                // Mark node
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                    grid[y, x] = 'O';
+
+                // label
+                string label = node?.ToString() ?? "null";
+                if (label.Length > labelMaxLength)
+                    label = label.Substring(0, labelMaxLength) + "~";
+
+                // New: prefer placing labels outside the circle along the radial direction from center
+                int startX = x;
+                int startY = y;
+                bool placed = false;
+
+                // Try radial placements at increasing distances
+                double angle = Math.Atan2(y - cy, x - cx);
+                double cos = Math.Cos(angle);
+                double sin = Math.Sin(angle);
+                int baseOffset = 2 + (label.Length + 1) / 2; // base distance from node
+                int maxDist = Math.Max(3, Math.Min(Math.Max(width, height) / 6, 10));
+
+                for (int dist = baseOffset; dist <= baseOffset + maxDist && !placed; dist++)
+                {
+                    int sx = Clamp(x + (int)Math.Round(cos * dist), 0, width - 1);
+                    int sy = Clamp(y + (int)Math.Round(sin * dist), 0, height - 1);
+
+                    if (TryPlaceLabel(sx, sy, label))
+                    {
+                        placed = true;
+                        break;
+                    }
+
+                    // also try slight lateral nudges along perpendicular direction to avoid arrows/other labels
+                    if (!placed)
+                    {
+                        int px = Clamp(sx - (int)Math.Round(sin * 1), 0, width - 1);
+                        int py = Clamp(sy + (int)Math.Round(cos * 1), 0, height - 1);
+                        if (TryPlaceLabel(px, py, label))
+                        {
+                            placed = true;
+                            break;
+                        }
+
+                        px = Clamp(sx + (int)Math.Round(sin * 1), 0, width - 1);
+                        py = Clamp(sy - (int)Math.Round(cos * 1), 0, height - 1);
+                        if (TryPlaceLabel(px, py, label))
+                        {
+                            placed = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Fallback: previous approach (closer placements: right, left, below, above)
+                if (!placed)
+                {
+                    int fallbackStartX = x + 2; // moved closer to the node (was +6)
+                    int fallbackStartY = y;
+                    if (fallbackStartX + label.Length <= width - 1)
+                    {
+                        placed = TryPlaceLabel(fallbackStartX, fallbackStartY, label);
+                    }
+                    else if (x - 2 - label.Length + 1 >= 0)
+                    {
+                        // place to left, hugging closer
+                        placed = TryPlaceLabel(x - 2 - label.Length + 1, fallbackStartY, label);
+                    }
+                    else
+                    {
+                        // try below
+                        if (y + 1 < height)
+                            placed = TryPlaceLabel(Math.Max(0, x - label.Length / 2), y + 1, label);
+                        else if (y - 1 >= 0)
+                            placed = TryPlaceLabel(Math.Max(0, x - label.Length / 2), y - 1, label);
+                    }
+                }
+
+                bool TryPlaceLabel(int sx, int sy, string lab)
+                {
+                    if (sx < 0 || sx + lab.Length > width || sy < 0 || sy >= height) return false;
+                    for (int k = 0; k < lab.Length; k++)
+                    {
+                        // avoid overwriting node marker or arrows or other labels; allow overwriting line-drawing characters
+                        char existing = grid[sy, sx + k];
+                        if (existing == 'O') return false; // don't overwrite node
+                        if (existing == '>' || existing == '<' || existing == 'v' || existing == '^') return false; // don't overwrite arrows
+                        // allow overwriting box-drawing chars and spaces
+                    }
+                    for (int k = 0; k < lab.Length; k++)
+                        grid[sy, sx + k] = lab[k];
+                    return true;
+                }
+            }
+
+            // Print top legend
+            Console.WriteLine($"Graph visualization ({width}x{height}) - nodes: {nodes.Count}");
+            // Render grid
+            var sb = new StringBuilder();
+            for (int yy = 0; yy < height; yy++)
+            {
+                sb.Clear();
+                for (int xx = 0; xx < width; xx++)
+                    sb.Append(grid[yy, xx]);
+                Console.WriteLine(sb.ToString().TrimEnd()); // trim trailing spaces for compactness
+            }
+
+            // Local clamp helper
+            static int Clamp(int v, int lo, int hi) => v < lo ? lo : (v > hi ? hi : v);
+        }
     }
 }
