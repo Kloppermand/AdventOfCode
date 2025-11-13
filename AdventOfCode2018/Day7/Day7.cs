@@ -34,11 +34,43 @@ namespace AdventOfCode2018.Day7
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
+            var graph = BuildGraphFromInput(input);
 
+            int workerNumber = 5;
+            int baseDuration = 60;
 
+            var workers = new List<Worker>();
+            for (int i = 0; i < workerNumber; i++)
+                workers.Add(new Worker());
+            
+            int t = 0;
+            while (graph.WeightedAdjacencyList.Count() > 0)
+            {
+                var frontier = graph.WeightedAdjacencyList.Keys
+                    .Where(v => !graph.WeightedAdjacencyList.Any(kvp => kvp.Value.ContainsKey(v))).ToList();
 
-            string result = "NOT SOLVED YET";
-            IO.WriteOutput(day, "b", result);
+                while (frontier.Where(n => !workers.Any(w => w.CurrentTask == n)).Any() &&
+                       workers.Any(w => w.IsIdle))
+                {
+                    var nextTask = frontier
+                        .Where(n => !workers.Any(w => w.CurrentTask == n))
+                        .Min();
+                    var idleWorker = workers.First(w => w.IsIdle);
+                    idleWorker.AssignTask(nextTask, baseDuration);
+                }
+                foreach (var worker in workers)
+                {
+                    var completedTask = worker.WorkOneSecond();
+                    if (completedTask.HasValue)
+                    {
+                        graph.RemoveVertex(completedTask.Value);
+                    }
+                }
+
+                t++;
+            }
+
+            IO.WriteOutput(day, "b", t);
         }
 
         private static Graph<char> BuildGraphFromInput(string[] input)

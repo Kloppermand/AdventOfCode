@@ -107,5 +107,21 @@ namespace UnitTests.Tests2018
             var result = File.ReadAllText(Path.Combine(root, "Day6/Day6_output_b.txt"));
             Assert.That(result, Is.EqualTo("45509"));
         }
+
+        [Test]
+        public void Day7A()
+        {
+            aoc.Day6.Day6.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_a.txt"));
+            Assert.That(result, Is.EqualTo("CGKMUWXFAIHSYDNLJQTREOPZBV"));
+        }
+
+        [Test]
+        public void Day7B()
+        {
+            aoc.Day6.Day6.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_b.txt"));
+            Assert.That(result, Is.EqualTo("1046"));
+        }
     }
 }
