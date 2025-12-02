@@ -14,8 +14,7 @@ namespace AdventOfCode2025.Day1
         public static void CalculateA()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-
-            var turns = input.Select(t => t[0] == 'L' ? -int.Parse(t[1..]) : int.Parse(t[1..]));
+            var turns = ParseTurns(input);
 
             int pointer = 50;
             int result = 0;
@@ -32,8 +31,7 @@ namespace AdventOfCode2025.Day1
         public static void CalculateB()
         {
             var input = IO.ReadInputFileStringArray(day, "a");
-
-            var turns = input.Select(t => t[0] == 'L' ? -int.Parse(t[1..]) : int.Parse(t[1..]));
+            var turns = ParseTurns(input);
 
             int pointer = 50;
             int result = 0;
@@ -43,16 +41,19 @@ namespace AdventOfCode2025.Day1
                 var old = pointer;
                 pointer += turn;
                 if (pointer < 1)
-                {
                     result += Math.Abs(pointer) / 100 + (old != 0 ? 1 : 0);
-                }
-                if(pointer > 99)
+                if (pointer > 99)
                     result += pointer / 100;
 
-                pointer = (10000 + pointer)%100;
+                UtilMath.Mod(pointer, 100);
             }
 
             IO.WriteOutput(day, "b", result);
+        }
+
+        private static IEnumerable<int> ParseTurns(string[] input)
+        {
+            return input.Select(t => t[0] == 'L' ? -int.Parse(t[1..]) : int.Parse(t[1..]));
         }
     }
 }
