@@ -33,19 +33,19 @@ namespace AdventOfCode2025.Day1
             var input = IO.ReadInputFileStringArray(day, "a");
             var turns = ParseTurns(input);
 
-            int pointer = 50;
+            int current = 50;
             int result = 0;
 
             foreach (var turn in turns)
             {
-                var old = pointer;
-                pointer += turn;
-                if (pointer < 1)
-                    result += Math.Abs(pointer) / 100 + (old != 0 ? 1 : 0);
-                if (pointer > 99)
-                    result += pointer / 100;
+                var old = current;
+                current += turn;
+                if (current < 1)
+                    result += Math.Abs(current) / 100 + (old != 0 ? 1 : 0);
+                if (current > 99)
+                    result += current / 100;
 
-                UtilMath.Mod(pointer, 100);
+                current = UtilMath.Mod(current, 100);
             }
 
             IO.WriteOutput(day, "b", result);
