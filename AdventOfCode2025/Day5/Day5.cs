@@ -37,18 +37,17 @@ namespace AdventOfCode2025.Day5
             while (ranges.Count > 0)
             {
                 var current = ranges.First();
-                var compatible = ranges.Where(r => r.CanMerge(current) && r != current);
-                if (compatible.Count() == 0)
+                var compatible = ranges.FirstOrDefault(r => r.CanMerge(current) && r != current);
+                if (compatible == null)
                 {
                     newRanges.Add(current);
                     ranges.Remove(current);
                     continue;
                 }
 
-                var other = compatible.First();
-                ranges.Add(current.Merge(other));
+                ranges.Add(current.Merge(compatible));
                 ranges.Remove(current);
-                ranges.Remove(other);
+                ranges.Remove(compatible);
             }
 
             var result = newRanges.Sum(r => r.Length);
