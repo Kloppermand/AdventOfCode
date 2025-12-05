@@ -30,6 +30,23 @@ namespace Utilities
             return new LongRange(start, start + Length);
         }
 
+        public bool CanMerge(LongRange other)
+        {
+            return !(other.end < this.start - 1 || other.start > this.end + 1);
+        }
+
+        public LongRange Merge(LongRange other)
+        {
+            if (!CanMerge(other))
+                throw new ArgumentException("Ranges cannot be merged");
+            return new LongRange(Math.Min(this.start, other.start), Math.Max(this.end, other.end));
+        }
+
+        public bool IsInRange(long n)
+        {
+            return n >= start && n <= end;
+        }
+
         public override string ToString()
         {
             return $"{start} - {end}, Length: {Length}";

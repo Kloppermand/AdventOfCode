@@ -1,4 +1,4 @@
-﻿using aoc = AdventOfCode2024;
+﻿using aoc = AdventOfCode2025;
 using Utilities;
 using System.Reflection.Metadata;
 
@@ -44,21 +44,21 @@ namespace UnitTests.Tests2025
             Assert.That(result, Is.EqualTo("41823587546"));
         }
 
-        //[Test]
-        //public void Day3A()
-        //{
-        //    aoc.Day3.Day3.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("174103751"));
-        //}
+        [Test]
+        public void Day3A()
+        {
+            aoc.Day3.Day3.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_a.txt"));
+            Assert.That(result, Is.EqualTo("17100"));
+        }
 
-        //[Test]
-        //public void Day3B()
-        //{
-        //    aoc.Day3.Day3.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("100411201"));
-        //}
+        [Test]
+        public void Day3B()
+        {
+            aoc.Day3.Day3.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day3/Day3_output_b.txt"));
+            Assert.That(result, Is.EqualTo("170418192256861"));
+        }
 
         //[Test]
         //public void Day4A()
