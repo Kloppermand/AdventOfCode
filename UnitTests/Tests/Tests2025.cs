@@ -108,21 +108,21 @@ namespace UnitTests.Tests2025
             Assert.That(result, Is.EqualTo("10603075273949"));
         }
 
-        //[Test]
-        //public void Day7A()
-        //{
-        //    aoc.Day7.Day7.CalculateA();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_a.txt"));
-        //    Assert.That(result, Is.EqualTo("2299996598890"));
-        //}
+        [Test]
+        public void Day7A()
+        {
+            aoc.Day7.Day7.CalculateA();
+            var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_a.txt"));
+            Assert.That(result, Is.EqualTo("1579"));
+        }
 
-        //[Test]
-        //public void Day7B()
-        //{
-        //    aoc.Day7.Day7.CalculateB();
-        //    var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_b.txt"));
-        //    Assert.That(result, Is.EqualTo("362646859298554"));
-        //}
+        [Test]
+        public void Day7B()
+        {
+            aoc.Day7.Day7.CalculateB();
+            var result = File.ReadAllText(Path.Combine(root, "Day7/Day7_output_b.txt"));
+            Assert.That(result, Is.EqualTo("13418215871354"));
+        }
 
         //[Test]
         //public void Day8A()

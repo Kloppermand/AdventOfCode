@@ -39,6 +39,22 @@ namespace Utilities
             return grid;
         }
 
+        public static char[,] ReadInputFileChar2DArray(string day, string puzzle)
+        {
+            string path = GetPath(day, puzzle, IOType.input);
+            string[] input = File.ReadAllText(path).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToArray();
+            if (input[^1] == "") input = input[..^1];
+            char[,] grid = new char[input.Length, input[0].Length];
+            for (int j = 0; j < input[0].Length; j++)
+            {
+                for (int i = 0; i < input.Length; i++)
+                {
+                    grid[i, j] = input[i][j];
+                }
+            }
+            return grid;
+        }
+
 
         public static long[] ReadInputFileLongArray(string day, string puzzle)
         {
@@ -139,18 +155,20 @@ namespace Utilities
             return path;
         }
 
-        public static void Print2DArray(int[,] array)
+        public static void Print2DArray<T>(T[,] array, string separator = "", int padTo = 0)
         {
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    Console.Write(array[i, j] + ",");
+                    object? val = array[i, j];
+                    Console.Write((val?.ToString() ?? "").PadLeft(padTo) + separator);
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
         }
+
         public static void PrintArray(IEnumerable input)
         {
             foreach (var row in input)
