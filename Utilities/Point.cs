@@ -55,7 +55,7 @@ namespace Utilities
             var tmp = point.Replace("(", "").Replace(")", "").Split(',');
             X = int.Parse(tmp[0]);
             Y = int.Parse(tmp[1]);
-            if(tmp.Length > 2)
+            if (tmp.Length > 2)
                 Z = int.Parse(tmp[2]);
         }
 
@@ -88,10 +88,20 @@ namespace Utilities
             long yDiff = (Y - other.Y);
             return xDiff * xDiff + yDiff * yDiff;
         }
-
         public int CityBlockDistance(Point other)
         {
             return Math.Abs(X - other.X) + Math.Abs(Y - other.Y) + Math.Abs(Z - other.Z);
+        }
+
+
+        public long RectangleArea(Point other)
+        {
+            return ((long)Math.Abs(X - other.X) + 1) * ((long)Math.Abs(Y - other.Y) + 1);
+        }
+
+        public long BoxVolume(Point other)
+        {
+            return ((long)Math.Abs(X - other.X) + 1) * ((long)Math.Abs(Y - other.Y) + 1) * ((long)Math.Abs(Z - other.Z) + 1);
         }
 
         public bool IsInRectangle(Point lowerLeftCorner, Point upperRightCorner)
@@ -99,16 +109,53 @@ namespace Utilities
             return (X >= lowerLeftCorner.X && X <= upperRightCorner.X) && (Y >= lowerLeftCorner.Y && Y <= upperRightCorner.Y);
         }
 
+        public bool IsInInnerRectangle(Point lowerLeftCorner, Point upperRightCorner)
+        {
+            return (X > lowerLeftCorner.X && X < upperRightCorner.X) && (Y > lowerLeftCorner.Y && Y < upperRightCorner.Y);
+        }
+
+        public (Point A, Point B) GetProberRectangle(Point other)
+        {
+            return (new Point(Math.Min(X, other.X), Math.Min(Y, other.Y)), new Point(Math.Max(X, other.X), Math.Max(Y, other.Y)));
+        }
+
         public bool IsInBox(Point lowestCorner, Point higestCorner)
         {
-            return (X >= lowestCorner.X && X <= higestCorner.X) 
+            return (X >= lowestCorner.X && X <= higestCorner.X)
                 && (Y >= lowestCorner.Y && Y <= higestCorner.Y)
                 && (Z >= lowestCorner.Z && Z <= higestCorner.Z);
         }
 
+        public List<Point> GetRectangleCorners(Point other)
+        {
+            return new List<Point>
+            {
+                new Point(Math.Max(X, other.X), Math.Max(Y, other.Y)),
+                new Point(Math.Min(X, other.X), Math.Max(Y, other.Y)),
+                new Point(Math.Min(X, other.X), Math.Min(Y, other.Y)),
+                new Point(Math.Max(X, other.X), Math.Min(Y, other.Y)),
+            };
+        }
+
+        public List<Point> GetInnerRectangleCorners(Point other)
+        {
+            return new List<Point>
+            {
+                new Point(Math.Max(X, other.X)-1, Math.Max(Y, other.Y)-1),
+                new Point(Math.Min(X, other.X)+1, Math.Max(Y, other.Y)-1),
+                new Point(Math.Min(X, other.X)+1, Math.Min(Y, other.Y)+1),
+                new Point(Math.Max(X, other.X)-1, Math.Min(Y, other.Y)+1),
+            };
+        }
+
+        public Point GetRectangleCenter(Point other)
+        {
+            return new Point((X + other.X) / 2, (Y + other.Y) / 2);
+        }
+
         public override string ToString()
         {
-            if(Z>0)
+            if (Z > 0)
                 return $"({X},{Y},{Z})";
             return $"({X},{Y})";
         }

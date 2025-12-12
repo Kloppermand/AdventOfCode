@@ -113,6 +113,11 @@ namespace Utilities
             if (retArr[^1] == "") retArr = retArr[..^1];
             return retArr;
         }
+
+        public static Point[] ReadInputFilePointArray(string day, string puzzle)
+        {
+            return ReadInputFileStringArray(day, puzzle).Select(t => new Point(t)).ToArray();
+        }
         public static void WriteOutput(string day, string puzzle, string value)
         {
             string path = GetPath(day, puzzle, IOType.output);
