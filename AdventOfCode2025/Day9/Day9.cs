@@ -17,12 +17,12 @@ namespace AdventOfCode2025.Day9
         {
             var input = IO.ReadInputFilePointArray(day, "a");
 
-            var pairs = input
+            var result = input
                 .SelectMany((p, i) => input
                     .Skip(i + 1)
-                    .Select(q => (A: p, B: q, Area: p.RectangleArea(q))));
+                    .Select(q => (A: p, B: q, Area: p.RectangleArea(q))))
+                .Max(p => p.Area);
 
-            var result = pairs.Max(p => p.Area);
             IO.WriteOutput(day, "a", result);
         }
         public static void CalculateB()
